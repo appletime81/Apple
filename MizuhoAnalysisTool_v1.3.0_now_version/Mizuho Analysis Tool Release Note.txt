@@ -1,0 +1,13 @@
+Version : 1.0.0
+Release Date : 20190902
+
+
+Bug Fixed :
+1. Fixed the bug of no result on the Detection screen when user click the OK button.
+2. Fixed the bug of incorrect MaxPeak value on the MultiResult screen.
+3.Fixed thr bug of no response when user click the Start button on the MultiResult screen.
+
+Add Function :
+1.Add the new function called 4 blocks detection on the Detection screen and MultiResult screen. There will be 4 rectangles showing up on the image after user click check box of "4 Blocks Detection" and clcik Start or OK button.
+When user clcik one of red rectangle on the image it will be showing the result on the chart.
+2. Add the the image and graph part screen on the middle of MultiResult screen.

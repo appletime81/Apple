@@ -1,0 +1,6 @@
+Version : 1.1.1
+Release Date : 20190926
+
+
+Bug Fixed :
+1. Fixed the error value of hMPV PN threshold on Detection screen.
