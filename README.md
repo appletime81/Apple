@@ -1,2 +1,0 @@
-# Apple
-Jedi Artificial Intelligence
