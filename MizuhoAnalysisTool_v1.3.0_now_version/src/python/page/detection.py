@@ -491,15 +491,15 @@ class DetectionPanel(BasePanel):
             ImgPathList = []
 
             if Disease=='Flu A':
-                NegPath='./samples/A/0'
+                NegPath='./samples/FluA/0'
             elif Disease=='Flu B':
-                NegPath='./samples/B/0'
+                NegPath='./samples/FluB/0'
             elif Disease=='Myco':
                 NegPath='./samples/Myco/0'
             elif Disease == 'RSV':
-                NegPath='./samples/RSV/0'
+                NegPath='./samples/RSV-hMPV/0'
             elif Disease=='hMPV':
-                NegPath='./samples/hMPV/0'
+                NegPath='./samples/RSV-hMPV/0'
             else:
                 NegPath='./samples/StrepA/0'
 
@@ -1074,9 +1074,9 @@ class DetectionPanel(BasePanel):
 
     def Block1Event(self, event):
         Result = self.ResultTextConvert(self.result1[3][0])
-        TestMaxValue = str(self.result1[3][3])
-        TestMinValue = str(self.result1[3][5])
-        TestMaxDiff = str(self.result1[3][1])
+        TestMaxValue = str(np.round(self.result1[3][3], decimals=3))
+        TestMinValue = str(np.round(self.result1[3][5], decimals=3))
+        TestMaxDiff = str(np.round(self.result1[3][1], decimals=3))
         self.TestDFArr = self.result1[3][6]
 
         self.Rect1.SetLineColor('Cyan')
@@ -1108,9 +1108,9 @@ class DetectionPanel(BasePanel):
 
     def Block2Event(self, event):
         Result = self.ResultTextConvert(self.result1[2][0])
-        TestMaxValue = str(self.result1[2][3])
-        TestMinValue = str(self.result1[2][5])
-        TestMaxDiff = str(self.result1[2][1])
+        TestMaxValue = str(np.round(self.result1[2][3], decimals=3))
+        TestMinValue = str(np.round(self.result1[2][5], decimals=3))
+        TestMaxDiff = str(np.round(self.result1[2][1], decimals=3))
         self.TestDFArr = self.result1[2][6]
 
         self.Rect1.SetLineColor('Red')
@@ -1143,9 +1143,9 @@ class DetectionPanel(BasePanel):
 
     def Block3Event(self, event):
         Result = self.ResultTextConvert(self.result1[1][0])
-        TestMaxValue = str(self.result1[1][3])
-        TestMinValue = str(self.result1[1][5])
-        TestMaxDiff = str(self.result1[1][1])
+        TestMaxValue = str(np.round(self.result1[1][3], decimals=3))
+        TestMinValue = str(np.round(self.result1[1][5], decimals=3))
+        TestMaxDiff = str(np.round(self.result1[1][1], decimals=3))
         self.TestDFArr = self.result1[1][6]
 
         self.Rect1.SetLineColor('Red')
@@ -1181,9 +1181,9 @@ class DetectionPanel(BasePanel):
 
     def Block4Event(self, event):
         Result = self.ResultTextConvert(self.result1[0][0])
-        TestMaxValue = str(self.result1[0][3])
-        TestMinValue = str(self.result1[0][5])
-        TestMaxDiff = str(self.result1[0][1])
+        TestMaxValue = str(np.round(self.result1[0][3], decimals=3))
+        TestMinValue = str(np.round(self.result1[0][5], decimals=3))
+        TestMaxDiff = str(np.round(self.result1[0][1], decimals=3))
         self.TestDFArr = self.result1[0][6]
 
         self.Rect1.SetLineColor('Red')
@@ -1218,9 +1218,9 @@ class DetectionPanel(BasePanel):
 
     def Block5Event(self, event):
         Result = self.ResultTextConvert(self.result1[3][0])
-        TestMaxValue = str(self.result1[3][3])
-        TestMinValue = str(self.result1[3][5])
-        TestMaxDiff = str(self.result1[3][1])
+        TestMaxValue = str(np.round(self.result1[3][3], decimals=3))
+        TestMinValue = str(np.round(self.result1[3][5], decimals=3))
+        TestMaxDiff = str(np.round(self.result1[3][1], decimals=3))
         self.TestDFArr = self.result1[3][6]
 
         self.Rect1.SetLineColor('Red')
@@ -1253,9 +1253,9 @@ class DetectionPanel(BasePanel):
 
     def Block6Event(self, event):
         Result = self.ResultTextConvert(self.result1[2][0])
-        TestMaxValue = str(self.result1[2][3])
-        TestMinValue = str(self.result1[2][5])
-        TestMaxDiff = str(self.result1[2][1])
+        TestMaxValue = str(np.round(self.result1[2][3], decimals=3))
+        TestMinValue = str(np.round(self.result1[2][5], decimals=3))
+        TestMaxDiff = str(np.round(self.result1[2][1], decimals=3))
         self.TestDFArr = self.result1[2][6]
 
         self.Rect1.SetLineColor('Red')
@@ -1291,9 +1291,9 @@ class DetectionPanel(BasePanel):
 
     def Block7Event(self, event):
         Result = self.ResultTextConvert(self.result1[1][0])
-        TestMaxValue = str(self.result1[1][3])
-        TestMinValue = str(self.result1[1][5])
-        TestMaxDiff = str(self.result1[1][1])
+        TestMaxValue = str(np.round(self.result1[1][3], decimals=3))
+        TestMinValue = str(np.round(self.result1[1][5], decimals=3))
+        TestMaxDiff = str(np.round(self.result1[1][1], decimals=3))
         self.TestDFArr = self.result1[1][6]
 
         self.Rect1.SetLineColor('Red')
@@ -1329,9 +1329,9 @@ class DetectionPanel(BasePanel):
 
     def Block8Event(self, event):
         Result = self.ResultTextConvert(self.result1[0][0])
-        TestMaxValue = str(self.result1[0][3])
-        TestMinValue = str(self.result1[0][5])
-        TestMaxDiff = str(self.result1[0][1])
+        TestMaxValue = str(np.round(self.result1[0][3], decimals=3))
+        TestMinValue = str(np.round(self.result1[0][5], decimals=3))
+        TestMaxDiff = str(np.round(self.result1[0][1], decimals=3))
         self.TestDFArr = self.result1[0][6]
 
         self.Rect1.SetLineColor('Red')

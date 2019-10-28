@@ -475,13 +475,15 @@ class MultiResultPanel(BasePanel):
 
         elif disease == 'hMPV':
             path = os.listdir('./samples/RSV-hMPV')
-            path = list(map(int, path))
-            path.sort()
+            path = list(map(str, path))
+            # print(path)
+            # path.sort()
             for i in range(len(path)):
                 paths.append('./samples/RSV-hMPV' + '/' + str(path[i]))
             for i in range(len(paths)):
                 for dirPath, dirNames, fileNames in os.walk(paths[i]):
                     dirPath = dirPath.replace('\\', '/')
+                    print(dirPath)
                     if path[i] != path[i - 1]:
                         self.imglst.append('0')
                         self.files.append('0')
@@ -898,9 +900,9 @@ class MultiResultPanel(BasePanel):
         Disease = self.ChoiceForDisease.GetValue()
 
         if Disease == 'Flu A':
-            NegPath = './samples/A/0'
+            NegPath = './samples/FluA/0'
         elif Disease == 'Flu B':
-            NegPath = './samples/B/0'
+            NegPath = './samples/FluB/0'
         elif Disease == 'Myco':
             NegPath = './samples/Myco/0'
         elif Disease == 'RSV':
@@ -1090,30 +1092,11 @@ class MultiResultPanel(BasePanel):
 
                 if self.FileExist() == True:
                     #self.TextTestLineResult.SetValue('')
-                    self.TextTestLineResultSec1.SetValue('Result:' + self.ResultTextConvert(self.result1[0][0]) + '\n'
-                                                         + 'Max Value:' + str(
-                        np.around(self.result1[0][3], decimals=3)) + '\n'
-                                                         + 'Min Value:' + str(
-                        np.around(self.result1[0][5], decimals=3)) + '\n'
-                                                         + 'Max Peak:' + str(np.around(self.result1[0][1], decimals=3)))
-                    self.TextTestLineResultSec2.SetValue('Result:' + self.ResultTextConvert(self.result1[1][0]) + '\n'
-                                                         + 'Max Value:' + str(
-                        np.around(self.result1[1][3], decimals=3)) + '\n'
-                                                         + 'Min Value:' + str(
-                        np.around(self.result1[1][5], decimals=3)) + '\n'
-                                                         + 'Max Peak:' + str(np.around(self.result1[1][1], decimals=3)))
-                    self.TextTestLineResultSec3.SetValue('Result:' + self.ResultTextConvert(self.result1[2][0]) + '\n'
-                                                         + 'Max Value:' + str(
-                        np.around(self.result1[2][3], decimals=3)) + '\n'
-                                                         + 'Min Value:' + str(
-                        np.around(self.result1[2][5], decimals=3)) + '\n'
-                                                         + 'Max Peak:' + str(np.around(self.result1[2][1], decimals=3)))
-                    self.TextTestLineResultSec4.SetValue('Result:' + self.ResultTextConvert(self.result1[3][0]) + '\n'
-                                                         + 'Max Value:' + str(
-                        np.around(self.result1[3][3], decimals=3)) + '\n'
-                                                         + 'Min Value:' + str(
-                        np.around(self.result1[3][5], decimals=3)) + '\n'
-                                                         + 'Max Peak:' + str(np.around(self.result1[3][1], decimals=3)))
+                    self.TextTestLineResultSec1.SetValue('Result:' + self.ResultTextConvert(self.result1[0][0]) + '\n' + 'Max Value:' + str(
+                        np.around(self.result1[0][3], decimals=3)) + '\n' + 'Min Value:' + str(np.around(self.result1[0][5], decimals=3)) + '\n' + 'Max Peak:' + str(np.around(self.result1[0][1], decimals=3)))
+                    self.TextTestLineResultSec2.SetValue('Result:' + self.ResultTextConvert(self.result1[1][0]) + '\n' + 'Max Value:' + str(np.around(self.result1[1][3], decimals=3)) + '\n' + 'Min Value:' + str(np.around(self.result1[1][5], decimals=3)) + '\n' + 'Max Peak:' + str(np.around(self.result1[1][1], decimals=3)))
+                    self.TextTestLineResultSec3.SetValue('Result:' + self.ResultTextConvert(self.result1[2][0]) + '\n'+ 'Max Value:' + str(np.around(self.result1[2][3], decimals=3)) + '\n' + 'Min Value:' + str(np.around(self.result1[2][5], decimals=3)) + '\n' + 'Max Peak:' + str(np.around(self.result1[2][1], decimals=3)))
+                    self.TextTestLineResultSec4.SetValue('Result:' + self.ResultTextConvert(self.result1[3][0]) + '\n'+ 'Max Value:' + str(np.around(self.result1[3][3], decimals=3)) + '\n' + 'Min Value:' + str(np.around(self.result1[3][5], decimals=3)) + '\n' + 'Max Peak:' + str(np.around(self.result1[3][1], decimals=3)))
                 else:
                     #self.TextTestLineResult.SetValue('')
                     self.TextCtrlLineResult.SetValue('')
@@ -1137,22 +1120,10 @@ class MultiResultPanel(BasePanel):
                 self.SlopeStatisticsChartForCtrlLine(self.Ctrl_color, self.Ctrl_start_interval, self.Ctrl_end_interval, -20, 20)
                 if self.FileExist()==True:
                     #self.TextTestLineResult.SetValue('')
-                    self.TextTestLineResultSec1.SetValue('Result:'+self.ResultTextConvert(self.result1[0][0])+'\n'
-                                                         +'Max Value:'+str(np.around(self.result1[0][3], decimals=3))+'\n'
-                                                         +'Min Value:'+str(np.around(self.result1[0][5], decimals=3))+'\n'
-                                                         +'Max Peak:'+str(np.around(self.result1[0][1], decimals=3)))
-                    self.TextTestLineResultSec2.SetValue('Result:'+self.ResultTextConvert(self.result1[1][0])+'\n'
-                                                         +'Max Value:'+str(np.around(self.result1[1][3], decimals=3))+'\n'
-                                                         +'Min Value:'+str(np.around(self.result1[1][5], decimals=3))+'\n'
-                                                         +'Max Peak:'+str(np.around(self.result1[1][1], decimals=3)))
-                    self.TextTestLineResultSec3.SetValue('Result:'+self.ResultTextConvert(self.result1[2][0])+'\n'
-                                                         +'Max Value:'+str(np.around(self.result1[2][3], decimals=3))+'\n'
-                                                         +'Min Value:'+str(np.around(self.result1[2][5], decimals=3))+'\n'
-                                                         +'Max Peak:'+str(np.around(self.result1[2][1], decimals=3)))
-                    self.TextTestLineResultSec4.SetValue('Result:'+self.ResultTextConvert(self.result1[3][0])+'\n'
-                                                         +'Max Value:'+str(np.around(self.result1[3][3], decimals=3))+'\n'
-                                                         +'Min Value:'+str(np.around(self.result1[3][5], decimals=3))+'\n'
-                                                         +'Max Peak:'+str(np.around(self.result1[3][1], decimals=3)))
+                    self.TextTestLineResultSec1.SetValue('Result:'+self.ResultTextConvert(self.result1[0][0])+'\n'+'Max Value:'+str(np.around(self.result1[0][3], decimals=3))+'\n'+'Min Value:'+str(np.around(self.result1[0][5], decimals=3))+'\n'+'Max Peak:'+str(np.around(self.result1[0][1], decimals=3)))
+                    self.TextTestLineResultSec2.SetValue('Result:'+self.ResultTextConvert(self.result1[1][0])+'\n'+'Max Value:'+str(np.around(self.result1[1][3], decimals=3))+'\n'+'Min Value:'+str(np.around(self.result1[1][5], decimals=3))+'\n'+'Max Peak:'+str(np.around(self.result1[1][1], decimals=3)))
+                    self.TextTestLineResultSec3.SetValue('Result:'+self.ResultTextConvert(self.result1[2][0])+'\n'+'Max Value:'+str(np.around(self.result1[2][3], decimals=3))+'\n'+'Min Value:'+str(np.around(self.result1[2][5], decimals=3))+'\n'+'Max Peak:'+str(np.around(self.result1[2][1], decimals=3)))
+                    self.TextTestLineResultSec4.SetValue('Result:'+self.ResultTextConvert(self.result1[3][0])+'\n'+'Max Value:'+str(np.around(self.result1[3][3], decimals=3))+'\n'+'Min Value:'+str(np.around(self.result1[3][5], decimals=3))+'\n'+'Max Peak:'+str(np.around(self.result1[3][1], decimals=3)))
                 else:
                     #self.TextTestLineResult.SetValue('')
                     self.TextCtrlLineResult.SetValue('')
