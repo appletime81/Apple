@@ -1,0 +1,1 @@
+AppVersion = "v0.6.0"
