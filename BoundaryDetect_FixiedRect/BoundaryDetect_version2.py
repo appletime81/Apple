@@ -97,6 +97,7 @@ class BoundaryDetect(wx.Frame):
 
     def Processing(self):
         img = cv2.imdecode(np.fromfile(self.photoPath, dtype=np.uint8), -1)
+        self.img_gray = cv2.imdecode(np.fromfile(self.photoPath, dtype=np.uint8), cv2.IMREAD_GRAYSCALE)
 
         img2 = img.copy()
         self.Angle = getAngle(img)
@@ -156,7 +157,7 @@ class BoundaryDetect(wx.Frame):
             bottom_right = (top_left[0] + w, top_left[1] + h)
 
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        self.img = img
+
 
         self.height, self.width, self.nrgb = img.shape
         if self.Angle == self.ZeroMat:
@@ -420,22 +421,25 @@ class BoundaryDetect(wx.Frame):
         self.CropImgMeanValue.SetValue(self.GrayValueText)
 
     def ShowCropImgMeanValue(self, x, y):
-
+        img =self.img_gray
         if self.click_lt==True:
-            crop_img_lt = cv2.cvtColor(self.img[x:x+220, y:y+220], cv2.COLOR_RGB2GRAY) #左上
+            crop_img_lt = img[x:x+220, y:y+220] #左上
             self.lt_mean_value, g, r, a = np.uint8(cv2.mean(crop_img_lt))
         if self.click_rt == True:
-            crop_img_rt = cv2.cvtColor(self.img[x:x+220, y:y+220], cv2.COLOR_RGB2GRAY) #右上
+            crop_img_rt = img[x:x+220, y:y+220] #右上
             self.rt_mean_value, g, r, a = np.uint8(cv2.mean(crop_img_rt))
         if self.click_lb == True:
-            crop_img_lb = cv2.cvtColor(self.img[x:x+220, y:y+220], cv2.COLOR_RGB2GRAY) #左下
+            crop_img_lb = img[x:x+220, y:y+220] #左下
             self.lb_mean_value, g, r, a = np.uint8(cv2.mean(crop_img_lb))
         if self.click_rb == True:
-            crop_img_rb = cv2.cvtColor(self.img[x:x+220, y:y+220], cv2.COLOR_RGB2GRAY) #右下
+            crop_img_rb = img[x:x+220, y:y+220] #右下
             self.rb_mean_value, g, r, a = np.uint8(cv2.mean(crop_img_rb))
         if self.click_mm == True:
-            crop_img_mm = cv2.cvtColor(self.img[x:x+220, y:y+220], cv2.COLOR_RGB2GRAY)  #中間
-            self.mm_mean_value, g, r, a = np.uint8(cv2.mean(crop_img_mm))
+            crop_img_mm = img[x:x+220, y:y+220]  #中間
+            # print(crop_img_mm[:,:])
+            self.mm_mean_value = np.uint8(np.mean(crop_img_mm[:,:]))
+            print( self.mm_mean_value)
+        img=None
 
         #np.set_printoptions(threshold=np.inf)
         # self.lt_mean_value, g, r, a = np.uint8(cv2.mean(crop_img_lt))
@@ -494,8 +498,8 @@ class BoundaryDetect(wx.Frame):
 
 
     def OnMouseLeftUp(self, event):
-        print(int(self.TopLeftImgX), int(self.TopLeftImgY))
-        self.ShowCropImgMeanValue(int(self.TopLeftImgX), int(self.TopLeftImgY))
+        #print(int(self.TopLeftImgX), int(self.TopLeftImgY))
+        #self.ShowCropImgMeanValue(int(self.TopLeftImgX), int(self.TopLeftImgY))
 
 
 
@@ -554,6 +558,8 @@ class BoundaryDetect(wx.Frame):
                 self.MoveObjectDetection(self.dragStartPt[0], self.dragStartPt[1], self.dragStartPt, self.DeltaW_sq, self.DeltaH_sq)
             elif self.click_mm == True:
                 self.MoveObjectDetection(self.dragStartPt[0], self.dragStartPt[1], self.dragStartPt, self.DeltaW_sq, self.DeltaH_sq)
+            self.ShowCropImgMeanValue(int(self.dragStartPt[0]/self.scaleW), int(self.dragStartPt[1]/self.scaleH))
+            print(int(self.dragStartPt[0]/self.scaleW), int(self.dragStartPt[1]/self.scaleH))
 
     def MoveObjectDetection(self, x_coord, y_coord, obj, DeltaW, DeltaH):
         # self.TopLeftImgX = round(x_coord/self.scaleW, 0)
