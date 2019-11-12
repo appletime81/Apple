@@ -47,7 +47,7 @@
  - [Build(cmd)]
  -- Choose one of the following: 
 --- pyinstaller -c --icon "icon/launcher.ico" --add-data "icon;icon" --add-data "csv;csv" --add-data "samples;samples" --add-data "src/layout;src/layout" main.py -n "Mizuho Analysis Tool"
---- pyinstaller -w --icon "icon/launcher.ico" --add-data "icon;icon" --add-data "csv;csv" --add-data "samples;samples" --add-data "src/layout;src/layout" main.py -n "Mizuho Analysis Tool_20191018_ver1.2.0"
+--- pyinstaller -w --icon "icon/launcher.ico" --add-data "icon;icon" --add-data "csv;csv" --add-data "samples;samples" --add-data "src/layout;src/layout" main.py -n "Mizuho Analysis Tool_20191101_ver1.3.0"
  --- pyinstaller -w --icon "icon/launcher.ico" --onefile main.py -n "Mizuho Analysis Tool"
  -- Cmd params: 
  --- -w -> (windows & mac) no cmd window at runtime

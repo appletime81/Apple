@@ -2,8 +2,7 @@
 import wx
 import os
 import cv2
-from .VirusDetectAlgo import *
-from .NosieFilter import *
+from ..algorithm.VirusDetectAlgo import *
 from matplotlib.backends.backend_wxagg import FigureCanvasWxAgg as FigureCanvas
 from matplotlib.figure import Figure
 from pandas import DataFrame
@@ -39,17 +38,17 @@ class DetectionPanel(BasePanel):
         self.OriginalStatisticsPanel = wx.Panel(self.LoadOriginalImgPanel, id=wx.ID_ANY, size=(450, 200), pos=(0, 235), style=0)
         #self.OriginalStatisticsPanel.SetBackgroundColour((0, 0, 255))
 
-        self.LoadEnhanceImgPanel = wx.Panel(self.panel, id=wx.ID_ANY, size=(500, 500), pos=(50, 547), style=0)
+        self.LoadEnhanceImgPanel = wx.Panel(self.panel, id=wx.ID_ANY, size=(500, 500), pos=(50, 560), style=0)
         #self.LoadEnhanceImgPanel.SetBackgroundColour((0, 255, 0))
 
         self.EnhancedStatisticsPanel = wx.Panel(self.LoadEnhanceImgPanel, id=wx.ID_ANY, size=(450, 200), pos=(0, 235), style=0)
         #self.EnhancedStatisticsPanel.SetBackgroundColour((255, 0, 0))
 
         #####Set the right panels#########################
-        self.SlopeFigurePanel = wx.Panel(self.panel, id=wx.ID_ANY, size=(2000, 1017), pos=(550, 30), style=wx.TAB_TRAVERSAL)
+        self.SlopeFigurePanel = wx.Panel(self.panel, id=wx.ID_ANY, size=(2000, 1017), pos=(550, 380), style=wx.TAB_TRAVERSAL)
         #self.SlopeFigurePanel.SetBackgroundColour((0, 255, 0))
 
-        self.SlopeStatisticsPanel = wx.Panel(self.SlopeFigurePanel, id=wx.ID_ANY, size=(650, 350), pos=(0, 0), style=0)
+        self.SlopeStatisticsPanel = wx.Panel(self.panel, id=wx.ID_ANY, size=(500, 220), pos=(555, 5), style=0)
         #self.SlopeStatisticsPanel.SetBackgroundColour((0, 0, 255))
 
         #####Set Float Cavans#############################
@@ -57,7 +56,7 @@ class DetectionPanel(BasePanel):
         self.EnhanceImg = FloatCanvas.FloatCanvas(self.LoadEnhanceImgPanel, -1, size=(500, 190), BackgroundColor='black')
 
         #####Set the buttons##############################
-        OkTestLineBut = wx.Button(self.SlopeFigurePanel, label='OK', pos=(320, 630), size=(50, 50))
+        OkTestLineBut = wx.Button(self.SlopeFigurePanel, label='OK', pos=(320, 286), size=(50, 50))
         OkTestLineBut.Bind(wx.EVT_BUTTON, self.TestLine)
 
         # CalBut = wx.Button(self.SlopeFigurePanel, label='Calculate', pos=(470, 10000))
@@ -74,19 +73,24 @@ class DetectionPanel(BasePanel):
 
         #####Show the CheckBox for enhance################
         self.CheckBoxForEnhance()
+        #self.CheckBoxEnhance.Bind(wx.EVT_CHECKBOX, self.TestLineWithEnhanceComboBox)
 
         #####Show the CheckBox for 4 blocks###############
         self.CheckBoxFor4Blocks()
 
         #####Show the CheckBox for White Balance##########
         self.CheckBoxForWhiteBalance()
+        #self.CheckBoxUseWhiteBalance.Bind(wx.EVT_CHECKBOX, self.TestLineWithWhiteBlanceComboBox)
 
 
         #####Show the ScrollMenu##########################
         self.ScrollMenu()
 
         #####Show the CheckBox for UseFilter##############
-        self.CheckBoxForUseFilter()
+        #self.CheckBoxForUseFilter()
+
+        ##Show the CheckBox & ComboBox for SmoothFilter###
+        self.CheckBoxAndComboBoxForSmoothFilter()
 
         #####Set default parameters#######################
         self.DefaultParameters()
@@ -94,9 +98,10 @@ class DetectionPanel(BasePanel):
         #####Set disease##################################
         self.ChoiceForDisease.Bind(wx.EVT_COMBOBOX, self.SetDefaultParameters)
 
+
+
         #####Build Rect##################################
         self.BuildRect()
-
 
         #####Set Figure Cavans############################
         self.OriginalImgFig = Figure()
@@ -153,6 +158,8 @@ class DetectionPanel(BasePanel):
 
             #####Call function###############################
             self.EnhanceImage()
+            self.WhiteBalanceImage()
+            self.EnhanceAndWhiteBalanceImage()
             self.numpy2wximage()
 
             self.boundary_original_rect = None
@@ -186,14 +193,56 @@ class DetectionPanel(BasePanel):
         im = gamma_enhance(image_matrix, enhance_value=2)
         self.EnhancedImgMat = im
 
+    def WhiteBalanceImage(self):
+        r=[];g=[];b=[]
+        W, H = self.img.GetSize()
+        for y in range(H):
+            for x in range(W):
+                r.append((self.img.GetRed(x, y)))
+                g.append((self.img.GetGreen(x, y)))
+                b.append((self.img.GetBlue(x, y)))
+        r = np.array(r).reshape(len(r), 1)
+        g = np.array(g).reshape(len(g), 1)
+        b = np.array(b).reshape(len(b), 1)
+        image_matrix = np.hstack((r, g, b))
+        image_matrix = np.reshape(image_matrix, (H, W, 3))
+        im = white_balance(image_matrix)
+        self.WhiteBalanceImgMat = im
+        print(self.WhiteBalanceImgMat)
+
+    def EnhanceAndWhiteBalanceImage(self):
+        r=[];g=[];b=[]
+        W, H = self.img.GetSize()
+        for y in range(H):
+            for x in range(W):
+                r.append((self.img.GetRed(x, y)))
+                g.append((self.img.GetGreen(x, y)))
+                b.append((self.img.GetBlue(x, y)))
+        r = np.array(r).reshape(len(r), 1)
+        g = np.array(g).reshape(len(g), 1)
+        b = np.array(b).reshape(len(b), 1)
+        image_matrix = np.hstack((r, g, b))
+        image_matrix = np.reshape(image_matrix, (H, W, 3))
+        im = gamma_enhance(image_matrix, enhance_value=2)
+        im = white_balance(im)
+        self.EnhanceWhiteBalanceImgMat = im
+
 
     def numpy2wximage(self):
         width = self.W
         height = self.H
-        image_matrix = self.EnhancedImgMat
+        #load EnhanceImage and WhiteBalanceImage and EnhanceWhiteBalance Image
+        image_matrix_enhance = self.EnhancedImgMat
+        image_matrix_whitebalance = self.WhiteBalanceImgMat
+        image_matrix_enhance_whitebalance = self.EnhanceWhiteBalanceImgMat
 
-        wxbmp = wx.Bitmap.FromBuffer(width, height, image_matrix)
-        wxImage = wxbmp.ConvertToImage()
+        wxbmp_enhance = wx.Bitmap.FromBuffer(width, height, image_matrix_enhance)
+        wxbmp_whitebalance = wx.Bitmap.FromBuffer(width, height, image_matrix_whitebalance)
+        wxbmp_enhance_whitebalance = wx.Bitmap.FromBuffer(width, height, image_matrix_enhance_whitebalance)
+
+        wxImage_enhance = wxbmp_enhance.ConvertToImage()
+        wxImage_whitebalance = wxbmp_whitebalance.ConvertToImage()
+        wxImage_enhance_whitebalance = wxbmp_enhance_whitebalance.ConvertToImage()
 
         if width > height:
             NewW = self.PhotoMaxSize
@@ -201,16 +250,31 @@ class DetectionPanel(BasePanel):
         else:
             NewH = self.PhotoMaxSize
             NewW = self.PhotoMaxSize * width / height
-        wxImage = wxImage.Scale(NewW, NewH)
+
+        wxImage_enhance = wxImage_enhance.Scale(NewW, NewH)
+        wxImage_whitebalance = wxImage_whitebalance.Scale(NewW, NewH)
+        wxImage_enhance_whitebalance = wxImage_enhance_whitebalance.Scale(NewW, NewH)
 
         #####Add the original pic########################
-        self.EnhancedBitmapImg = Bitmap(wx.Bitmap(wxImage), (0, 0), Position='cc', InForeground=False)
+        self.EnhancedBitmapImg = Bitmap(wx.Bitmap(wxImage_enhance), (0, 0), Position='cc', InForeground=False)
+        self.WhiteBalanceBitmapImg = Bitmap(wx.Bitmap(wxImage_whitebalance), (0, 0), Position='cc', InForeground=False)
+        self.EnhancedWhiteBalanceBitmapImg = Bitmap(wx.Bitmap(wxImage_enhance_whitebalance), (0, 0), Position='cc', InForeground=False)
+
         # self.EnhanceImg.ClearAll(ResetBB=True)
         # self.EnhanceImg.AddObject(self.EnhancedBitmapImg)
         # self.EnhanceImg.Draw(True)
 
     def ShowPlot(self, im):
         image = np.array(im)
+        if self.CheckBoxEnhance.GetValue()==True and self.CheckBoxUseWhiteBalance.GetValue()==False:
+            image = gamma_enhance(image)
+        elif self.CheckBoxEnhance.GetValue()==True and self.CheckBoxUseWhiteBalance.GetValue()==True:
+            image = gamma_enhance(image)
+            image = white_balance(image)
+        elif self.CheckBoxEnhance.GetValue() == False and self.CheckBoxUseWhiteBalance.GetValue() == True:
+            image = white_balance(image)
+        else:
+            image = image
         r, g, b = image[:, :, 0], image[:, :, 1], image[:, :, 2]
         r = np.average(np.transpose(r), axis=1)
         g = np.average(np.transpose(g), axis=1)
@@ -226,74 +290,100 @@ class DetectionPanel(BasePanel):
         return df
 
     def ShowStaticText(self):
-        self.ResultText = wx.StaticText(self.SlopeFigurePanel, label='Result : ', pos=(50, 360))
-
-        self.statictext_virus_title = wx.StaticText(self.SlopeFigurePanel, label='Disease : ', pos=(50, 390))
-
-        #########Control Line#####
-        self.StatictextCtrlLineTitle = wx.StaticText(self.SlopeFigurePanel, label='Control Line', pos=(50, 450))
-        self.StatictextCtrlLineColor = wx.StaticText(self.SlopeFigurePanel, label='RGB Color ', pos=(50, 480))
-        self.StatictextCtrlLineSt = wx.StaticText(self.SlopeFigurePanel, label='Strides Threshold : ', pos=(50, 510))
-        self.StatictextCtrlLinePN = wx.StaticText(self.SlopeFigurePanel, label='PN Threshold : ', pos=(50, 540))
-        self.StatictextCtrlLineRS = wx.StaticText(self.SlopeFigurePanel, label='Range of Start : ', pos=(50, 570))
-        self.StatictextCtrlLineRE = wx.StaticText(self.SlopeFigurePanel, label='Range of End : ', pos=(50, 600))
-
-        #########Test Line########
-        self.StatictextTestLineTitle = wx.StaticText(self.SlopeFigurePanel, label='Test Line', pos=(320, 450))
-        self.StatictextTestLineColor = wx.StaticText(self.SlopeFigurePanel, label='RGB Color ', pos=(320, 10000))
-        self.StatictextTestLineSt = wx.StaticText(self.SlopeFigurePanel, label='Strides Threshold : ', pos=(320, 510))
-        self.StatictextTestLinePN = wx.StaticText(self.SlopeFigurePanel, label='PN Threshold : ', pos=(320, 540))
-        self.StatictextTestLineRS = wx.StaticText(self.SlopeFigurePanel, label='Range of Start : ', pos=(320, 570))
-        self.StatictextTestLineRE = wx.StaticText(self.SlopeFigurePanel, label='Range of End : ', pos=(320, 600))
 
         #########Result Title#####
-        self.StatictxtResltTitleLeft = wx.StaticText(self.SlopeStatisticsPanel, label='Control Line', pos=(50, 240))
-        self.StatictxtResltTitleRight = wx.StaticText(self.SlopeStatisticsPanel, label='Test Line', pos=(320, 240))
+        self.StatictxtResltTitleLeft = wx.StaticText(self.panel, label='Control Line', pos=(600, 240))
+        self.StatictxtResltTitleRight = wx.StaticText(self.panel, label='Test Line', pos=(800, 240))
 
-        self.StdTxt = wx.StaticText(self.SlopeFigurePanel, label='Std. Value', pos=(507, 520))
+        self.StatictextCtrlLineResult = wx.StaticText(self.panel, label='Result : ', pos=(600, 257))
+        self.StatictextCtrlLineMax = wx.StaticText(self.panel, label='Max Value : ', pos=(600, 282))
+        self.StatictextCtrlLineMin = wx.StaticText(self.panel, label='Min Value : ', pos=(600, 307))
+        self.StatictextCtrlLinePeak = wx.StaticText(self.panel, label='MaxPeak : ', pos=(600, 332))
+
+        self.StatictextTestLineResult = wx.StaticText(self.panel, label='Result : ', pos=(800, 257))
+        self.StatictextTestLineMax = wx.StaticText(self.panel, label='Max Value : ', pos=(800, 282))
+        self.StatictextTestLineMin = wx.StaticText(self.panel, label='Min Value : ', pos=(800, 307))
+        self.StatictextTestLinePeak = wx.StaticText(self.panel, label='MaxPeak : ', pos=(800, 332))
+
+        self.ResultText = wx.StaticText(self.SlopeFigurePanel, label='Result : ', pos=(50, 10))
+        self.statictext_virus_title = wx.StaticText(self.SlopeFigurePanel, label='Disease : ', pos=(50, 40))
+
+        #########Control Line Input Para Area#####
+        self.StatictextCtrlLineTitle = wx.StaticText(self.SlopeFigurePanel, label='Control Line', pos=(50, 100))
+        self.StatictextCtrlLineColor = wx.StaticText(self.SlopeFigurePanel, label='RGB Color ', pos=(50, 130))
+        self.StatictextCtrlLineSt = wx.StaticText(self.SlopeFigurePanel, label='Strides Threshold : ', pos=(50, 160))
+        self.StatictextCtrlLinePN = wx.StaticText(self.SlopeFigurePanel, label='PN Threshold : ', pos=(50, 190))
+        self.StatictextCtrlLineRS = wx.StaticText(self.SlopeFigurePanel, label='Range of Start : ', pos=(50, 220))
+        self.StatictextCtrlLineRE = wx.StaticText(self.SlopeFigurePanel, label='Range of End : ', pos=(50, 250))
+
+        #########Test Line Input Para Area########
+        self.StatictextTestLineTitle = wx.StaticText(self.SlopeFigurePanel, label='Test Line', pos=(320, 100))
+        self.StatictextTestLineSt = wx.StaticText(self.SlopeFigurePanel, label='Strides Threshold : ', pos=(320, 160))
+        self.StatictextTestLinePN = wx.StaticText(self.SlopeFigurePanel, label='PN Threshold : ', pos=(320, 190))
+        self.StatictextTestLineRS = wx.StaticText(self.SlopeFigurePanel, label='Range of Start : ', pos=(320, 220))
+        self.StatictextTestLineRE = wx.StaticText(self.SlopeFigurePanel, label='Range of End : ', pos=(320, 250))
+
+        self.StdTxt = wx.StaticText(self.SlopeFigurePanel, label='Std. Value', pos=(507, 170))
 
     def ShowTextCtrl(self):
         self.InputValueTxtGamma = wx.TextCtrl(parent=self.SlopeFigurePanel, pos=(71, 10000), size=(33, 23))
         #########Control Line#####
-        self.InputValueTxtCtrlLineSt = wx.TextCtrl(self.SlopeFigurePanel, pos=(157, 510), size=(33, 23))
-        self.InputValueTxtCtrlLinePN = wx.TextCtrl(self.SlopeFigurePanel, pos=(157, 540), size=(33, 25))
-        self.InputValueTxtCtrlLineRS = wx.TextCtrl(self.SlopeFigurePanel, pos=(157, 570), size=(33, 23))
-        self.InputValueTxtCtrlLineRE = wx.TextCtrl(self.SlopeFigurePanel, pos=(157, 600), size=(33, 23))
+        self.InputValueTxtCtrlLineSt = wx.TextCtrl(self.SlopeFigurePanel, pos=(157, 160), size=(33, 23))
+        self.InputValueTxtCtrlLinePN = wx.TextCtrl(self.SlopeFigurePanel, pos=(157, 190), size=(33, 25))
+        self.InputValueTxtCtrlLineRS = wx.TextCtrl(self.SlopeFigurePanel, pos=(157, 220), size=(33, 23))
+        self.InputValueTxtCtrlLineRE = wx.TextCtrl(self.SlopeFigurePanel, pos=(157, 250), size=(33, 23))
 
         #########Test Line########
-        self.InputValueTxtTestLineSt = wx.TextCtrl(self.SlopeFigurePanel, pos=(427, 510), size=(33, 23))
-        self.InputValueTxtTestLinePN = wx.TextCtrl(self.SlopeFigurePanel, pos=(427, 540), size=(33, 25))
-        self.InputValueTxtTestLineRS = wx.TextCtrl(self.SlopeFigurePanel, pos=(427, 570), size=(33, 23))
-        self.InputValueTxtTestLineRE = wx.TextCtrl(self.SlopeFigurePanel, pos=(427, 600), size=(33, 23))
+        self.InputValueTxtTestLineSt = wx.TextCtrl(self.SlopeFigurePanel, pos=(427, 160), size=(33, 23))
+        self.InputValueTxtTestLinePN = wx.TextCtrl(self.SlopeFigurePanel, pos=(427, 190), size=(33, 25))
+        self.InputValueTxtTestLineRS = wx.TextCtrl(self.SlopeFigurePanel, pos=(427, 220), size=(33, 23))
+        self.InputValueTxtTestLineRE = wx.TextCtrl(self.SlopeFigurePanel, pos=(427, 250), size=(33, 23))
 
-        #########PN Threshold#####
-        #self.ShowCalculatedPN = wx.TextCtrl(self.SlopeFigurePanel, pos=(572, 538), size=(65, 23))
+        ###Control line Result###
+        #self.CtrlLineResult = wx.TextCtrl(self.SlopeStatisticsPanel, pos=(224, 243), size=(33, 23))#203 357
+
 
     def ShowResultTextCtrl(self):
-        str = 'Result : \nMax Value : \nMini Value : \nMaxPeak : '
-        self.TextCtrlLineResult = wx.TextCtrl(self.SlopeStatisticsPanel, style=wx.TE_MULTILINE|wx.TE_READONLY|wx.NO_BORDER, value=str,id=wx.ID_ANY, pos=(50, 259), size=(250, 70))
-        self.TextTestLineResult = wx.TextCtrl(self.SlopeStatisticsPanel, style=wx.TE_MULTILINE|wx.TE_READONLY|wx.NO_BORDER, value=str,id=wx.ID_ANY, pos=(320, 259), size=(250, 70))
+        #str = 'Result : \nMax Value : \nMini Value : \nMaxPeak : '
+        # self.TextCtrlLineResult = wx.TextCtrl(self.SlopeStatisticsPanel, style=wx.TE_MULTILINE|wx.TE_READONLY|wx.NO_BORDER, value=str,id=wx.ID_ANY, pos=(50, 259), size=(150, 70))
+        # self.TextTestLineResult = wx.TextCtrl(self.SlopeStatisticsPanel, style=wx.TE_MULTILINE|wx.TE_READONLY|wx.NO_BORDER, value=str,id=wx.ID_ANY, pos=(320, 259), size=(150, 70))
+        self.CtrlLineResult = wx.TextCtrl(self.panel, pos=(680, 255), size=(70, 20))  # 203 357
+        self.CtrlLineMaxValue = wx.TextCtrl(self.panel, pos=(680, 280), size=(70, 20))  # 203 357
+        self.CtrlLineMinValue = wx.TextCtrl(self.panel, pos=(680, 305), size=(70, 20))  # 203 357
+        self.CtrlLineMaxPeak = wx.TextCtrl(self.panel, pos=(680, 330), size=(70, 20))  # 203 357
+
+        self.TestLineResult = wx.TextCtrl(self.panel, pos=(880, 255), size=(70, 20))  # 203 357
+        self.TestLineMaxValueText = wx.TextCtrl(self.panel, pos=(880, 280), size=(70, 20))  # 203 357
+        self.TestLineMinValueText = wx.TextCtrl(self.panel, pos=(880, 305), size=(70, 20))  # 203 357
+        self.TestLineMaxPeakText = wx.TextCtrl(self.panel, pos=(880, 330), size=(70, 20))  # 203 357
+
 
     def VirusColorOption(self):
-        self.ChoiceForDisease = wx.ComboBox(self.SlopeFigurePanel, value='', pos=(114, 390), choices=['Flu A', 'Flu B', 'Myco', 'RSV', 'hMPV', 'StrepA'], size=(100, 20))
-        self.ChoiceForCtrlLineRGB = wx.ComboBox(self.SlopeFigurePanel, value='', pos=(114, 480), choices=['R', 'G', 'B'], size=(100, 20))
-        self.ChoiceForTestLineRGB = wx.ComboBox(self.SlopeFigurePanel, value='', pos=(320, 480), choices=['R', 'G', 'B'], size=(100, 20))
+        self.ChoiceForDisease = wx.ComboBox(self.SlopeFigurePanel, value='', pos=(114, 40), choices=['Flu A', 'Flu B', 'Myco', 'RSV', 'hMPV', 'StrepA'], size=(100, 20))
+        self.ChoiceForCtrlLineRGB = wx.ComboBox(self.SlopeFigurePanel, value='', pos=(114, 130), choices=['R', 'G', 'B'], size=(100, 20))
+        self.ChoiceForTestLineRGB = wx.ComboBox(self.SlopeFigurePanel, value='', pos=(320, 130), choices=['R', 'G', 'B'], size=(100, 20))
 
     def CheckBoxForEnhance(self):
-        self.CheckBoxEnhance = wx.CheckBox(self.SlopeFigurePanel, id=wx.ID_ANY, label='Enhance', pos=(50, 420))
+        self.CheckBoxEnhance = wx.CheckBox(self.panel, id=wx.ID_ANY, label='Enhance', pos=(56, 544))
         self.CheckBoxEnhance.SetValue(True)
 
-    def CheckBoxForUseFilter(self):
-        self.CheckBoxUseFilter = wx.CheckBox(self.SlopeFigurePanel, id=wx.ID_ANY, label='Use Filter', pos=(150, 420))
-        self.CheckBoxUseFilter.Bind(wx.EVT_CHECKBOX, self.SetDefaultParameters)
-        self.CheckBoxUseFilter.SetValue(True)
-        if self.CheckBoxUseFilter.GetValue()==True:
-            self.useFilter = True
-        else:
-            self.useFilter = False
+    # def CheckBoxForUseFilter(self):
+    #     self.CheckBoxUseFilter = wx.CheckBox(self.SlopeFigurePanel, id=wx.ID_ANY, label='Use Filter', pos=(150, 420))
+    #     self.CheckBoxUseFilter.Bind(wx.EVT_CHECKBOX, self.SetDefaultParameters)
+    #     self.CheckBoxUseFilter.SetValue(True)
+    #     if self.CheckBoxUseFilter.GetValue()==True:
+    #         self.useFilter = True
+    #     else:
+    #         self.useFilter = False
+
+    def CheckBoxAndComboBoxForSmoothFilter(self):
+        self.CheckBoxUseSmoothFilter = wx.CheckBox(self.SlopeFigurePanel, id=wx.ID_ANY, label='Use SmoothFilter', pos=(50, 70))
+        self.CheckBoxUseSmoothFilter.SetValue(True)
+        self.ComboBoxSmoothFilter = wx.ComboBox(self.SlopeFigurePanel, id=wx.ID_ANY, value='3', choices=['3', '5', '7', '9', '11', '13', '15'], pos=(170, 67))
+
 
     def CheckBoxFor4Blocks(self):
-        self.CheckBoxBlocks = wx.CheckBox(self.SlopeFigurePanel, id=wx.ID_ANY, label='4 Blocks Detection', pos=(370, 420))
+        self.CheckBoxBlocks = wx.CheckBox(self.SlopeFigurePanel, id=wx.ID_ANY, label='4 Blocks Detection', pos=(230, 70))
         self.CheckBoxBlocks.SetValue(False)
 
     def CheckBox4BlocksEvent(self, event):
@@ -304,128 +394,129 @@ class DetectionPanel(BasePanel):
         self.GeneratePN4Blocks()
 
     def CheckBoxForWhiteBalance(self):
-        self.CheckBoxUseWhiteBalance = wx.CheckBox(self.SlopeFigurePanel, id=wx.ID_ANY, label='White Balance', pos=(245, 420))
+        self.CheckBoxUseWhiteBalance = wx.CheckBox(self.panel, id=wx.ID_ANY, label='White Balance', pos=(136, 544))
         self.CheckBoxUseWhiteBalance.SetValue(True)
 
 
     def ScrollMenu(self):
         #4Blocks選單
-        self.BlockNum = wx.ComboBox(self.SlopeFigurePanel, value='4', choices=['4', '3', '2', '1'], pos=(495, 417))
+        self.BlockNum = wx.ComboBox(self.SlopeFigurePanel, value='4', choices=['4', '3', '2', '1'], pos=(356, 67))
         #標準差選單
-        self.StdValue = wx.ComboBox(self.SlopeFigurePanel, value='4', choices=['5', '4', '3', '2', '1'], pos=(510, 538), size=(51, 22))
+        self.StdValue = wx.ComboBox(self.SlopeFigurePanel, value='4', choices=['5', '4', '3', '2', '1'], pos=(510, 188), size=(51, 22))
 
     def ClickBtnPN(self):
-        self.PnThresholdBut = wx.Button(self.SlopeFigurePanel, label='Cal.', pos=(475, 537), size=(30,25))
+        self.PnThresholdBut = wx.Button(self.SlopeFigurePanel, label='Cal.', pos=(475, 187), size=(30,25))
 
     def DefaultParameters(self):
         self.ChoiceForDisease.SetSelection(0)
+        line_para_map = get_line_para_map('FluA')
 
         #####Test line default parameters############
-        self.ChoiceForTestLineRGB.SetSelection(line_para_map['FluA'][1][0])
+        self.ChoiceForTestLineRGB.SetSelection(line_para_map[1][0])
         self.InputValueTxtGamma.SetValue('2')
-        self.InputValueTxtTestLineSt.SetValue(str(line_para_map['FluA'][1][3]))
-        self.InputValueTxtTestLinePN.SetValue(str(line_para_map['FluA'][1][4]))
-        self.InputValueTxtTestLineRS.SetValue(str(line_para_map['FluA'][1][1]))
-        self.InputValueTxtTestLineRE.SetValue(str(line_para_map['FluA'][1][2]))
+        self.InputValueTxtTestLineSt.SetValue(str(line_para_map[1][3]))
+        self.InputValueTxtTestLinePN.SetValue(str(line_para_map[1][4]))
+        self.InputValueTxtTestLineRS.SetValue(str(line_para_map[1][1]))
+        self.InputValueTxtTestLineRE.SetValue(str(line_para_map[1][2]))
 
         #####Control line default parameters#########
-        self.ChoiceForCtrlLineRGB.SetSelection(line_para_map['FluA'][0][0])
+        self.ChoiceForCtrlLineRGB.SetSelection(line_para_map[0][0])
         self.InputValueTxtGamma.SetValue('2')
-        self.InputValueTxtCtrlLineSt.SetValue(str(line_para_map['FluA'][0][3]))
-        self.InputValueTxtCtrlLinePN.SetValue(str(line_para_map['FluA'][0][4]))
-        self.InputValueTxtCtrlLineRS.SetValue(str(line_para_map['FluA'][0][1]))
-        self.InputValueTxtCtrlLineRE.SetValue(str(line_para_map['FluA'][0][2]))
+        self.InputValueTxtCtrlLineSt.SetValue(str(line_para_map[0][3]))
+        self.InputValueTxtCtrlLinePN.SetValue(str(line_para_map[0][4]))
+        self.InputValueTxtCtrlLineRS.SetValue(str(line_para_map[0][1]))
+        self.InputValueTxtCtrlLineRE.SetValue(str(line_para_map[0][2]))
 
     def SetDefaultParameters(self, event):
-        if self.CheckBoxUseFilter.GetValue()==True:
-            self.useFilter = True
-            para=line_para_map
+        if self.CheckBoxUseSmoothFilter.GetValue()==True:
+            #self.useFilter = True
+            para=[get_line_para_map('FluA'), get_line_para_map('FluB'), get_line_para_map('Myco'), get_line_para_map('RSV-hMPV'), get_line_para_map('StrepA')]
         else:
-            self.useFilter = False
-            para=line_para_map_no_filter
+            #self.useFilter = False
+            para=[get_line_para_map('FluA'), get_line_para_map('FluB'), get_line_para_map('Myco'), get_line_para_map('RSV-hMPV'), get_line_para_map('StrepA')]
         if self.ChoiceForDisease.GetValue() == 'Flu A':
-            self.ChoiceForTestLineRGB.SetSelection(para['FluA'][1][0])
+            self.ChoiceForTestLineRGB.SetSelection(para[0][1][0])
             self.InputValueTxtGamma.SetValue('2')
-            self.InputValueTxtTestLineSt.SetValue(str(para['FluA'][1][3]))
-            self.InputValueTxtTestLinePN.SetValue(str(para['FluA'][1][4]))
-            self.InputValueTxtTestLineRS.SetValue(str(para['FluA'][1][1]))
-            self.InputValueTxtTestLineRE.SetValue(str(para['FluA'][1][2]))
-            self.ChoiceForCtrlLineRGB
-            self.ChoiceForCtrlLineRGB.SetSelection(para['FluA'][0][0])
-            self.InputValueTxtCtrlLineSt.SetValue(str(para['FluA'][0][3]))
-            self.InputValueTxtCtrlLinePN.SetValue(str(para['FluA'][0][4]))
-            self.InputValueTxtCtrlLineRS.SetValue(str(para['FluA'][0][1]))
-            self.InputValueTxtCtrlLineRE.SetValue(str(para['FluA'][0][2]))
+            self.InputValueTxtTestLineSt.SetValue(str(para[0][1][3]))
+            self.InputValueTxtTestLinePN.SetValue(str(para[0][1][4]))
+            self.InputValueTxtTestLineRS.SetValue(str(para[0][1][1]))
+            self.InputValueTxtTestLineRE.SetValue(str(para[0][1][2]))
+            # self.ChoiceForCtrlLineRGB
+            self.ChoiceForCtrlLineRGB.SetSelection(para[0][0][0])
+            self.InputValueTxtCtrlLineSt.SetValue(str(para[0][0][3]))
+            self.InputValueTxtCtrlLinePN.SetValue(str(para[0][0][4]))
+            self.InputValueTxtCtrlLineRS.SetValue(str(para[0][0][1]))
+            self.InputValueTxtCtrlLineRE.SetValue(str(para[0][0][2]))
 
         if self.ChoiceForDisease.GetValue() == 'Flu B':
-            self.ChoiceForCtrlLineRGB.SetSelection(para['FluB'][0][0])
+            self.ChoiceForCtrlLineRGB.SetSelection(para[1][0][0])
             self.InputValueTxtGamma.SetValue('2')
-            self.InputValueTxtCtrlLineSt.SetValue(str(para['FluB'][0][3]))
-            self.InputValueTxtCtrlLinePN.SetValue(str(para['FluB'][0][4]))
-            self.InputValueTxtCtrlLineRS.SetValue(str(para['FluB'][0][1]))
-            self.InputValueTxtCtrlLineRE.SetValue(str(para['FluB'][0][2]))
+            self.InputValueTxtCtrlLineSt.SetValue(str(para[1][0][3]))
+            self.InputValueTxtCtrlLinePN.SetValue(str(para[1][0][4]))
+            self.InputValueTxtCtrlLineRS.SetValue(str(para[1][0][1]))
+            self.InputValueTxtCtrlLineRE.SetValue(str(para[1][0][2]))
 
-            self.ChoiceForTestLineRGB.SetSelection(para['FluB'][1][0])
-            self.InputValueTxtTestLineSt.SetValue(str(para['FluB'][1][3]))
-            self.InputValueTxtTestLinePN.SetValue(str(para['FluB'][1][4]))
-            self.InputValueTxtTestLineRS.SetValue(str(para['FluB'][1][1]))
-            self.InputValueTxtTestLineRE.SetValue(str(para['FluB'][1][2]))
+            self.ChoiceForTestLineRGB.SetSelection(para[1][1][0])
+            self.InputValueTxtTestLineSt.SetValue(str(para[1][1][3]))
+            self.InputValueTxtTestLinePN.SetValue(str(para[1][1][4]))
+            self.InputValueTxtTestLineRS.SetValue(str(para[1][1][1]))
+            self.InputValueTxtTestLineRE.SetValue(str(para[1][1][2]))
 
         if self.ChoiceForDisease.GetValue() == 'Myco':
-            self.ChoiceForCtrlLineRGB.SetSelection(para['Myco'][0][0])
+            self.ChoiceForCtrlLineRGB.SetSelection(para[2][0][0])
             self.InputValueTxtGamma.SetValue('2')
-            self.InputValueTxtCtrlLineSt.SetValue(str(para['Myco'][0][3]))
-            self.InputValueTxtCtrlLinePN.SetValue(str(para['Myco'][0][4]))
-            self.InputValueTxtCtrlLineRS.SetValue(str(para['Myco'][0][1]))
-            self.InputValueTxtCtrlLineRE.SetValue(str(para['Myco'][0][2]))
+            self.InputValueTxtCtrlLineSt.SetValue(str(para[2][0][3]))
+            self.InputValueTxtCtrlLinePN.SetValue(str(para[2][0][4]))
+            self.InputValueTxtCtrlLineRS.SetValue(str(para[2][0][1]))
+            self.InputValueTxtCtrlLineRE.SetValue(str(para[2][0][2]))
 
-            self.ChoiceForTestLineRGB.SetSelection(para['Myco'][1][0])
-            self.InputValueTxtTestLineSt.SetValue(str(para['Myco'][1][3]))
-            self.InputValueTxtTestLinePN.SetValue(str(para['Myco'][1][4]))
-            self.InputValueTxtTestLineRS.SetValue(str(para['Myco'][1][1]))
-            self.InputValueTxtTestLineRE.SetValue(str(para['Myco'][1][2]))
+            self.ChoiceForTestLineRGB.SetSelection(para[2][1][0])
+            self.InputValueTxtTestLineSt.SetValue(str(para[2][1][3]))
+            self.InputValueTxtTestLinePN.SetValue(str(para[2][1][4]))
+            self.InputValueTxtTestLineRS.SetValue(str(para[2][1][1]))
+            self.InputValueTxtTestLineRE.SetValue(str(para[2][1][2]))
 
         if self.ChoiceForDisease.GetValue() == 'RSV':
-            self.ChoiceForCtrlLineRGB.SetSelection(para['RSV-hMPV'][0][0])
+            self.ChoiceForCtrlLineRGB.SetSelection(para[3][0][0])
             self.InputValueTxtGamma.SetValue('2')
-            self.InputValueTxtCtrlLineSt.SetValue(str(para['RSV-hMPV'][0][3]))
-            self.InputValueTxtCtrlLinePN.SetValue(str(para['RSV-hMPV'][0][4]))
-            self.InputValueTxtCtrlLineRS.SetValue(str(para['RSV-hMPV'][0][1]))
-            self.InputValueTxtCtrlLineRE.SetValue(str(para['RSV-hMPV'][0][2]))
+            self.InputValueTxtCtrlLineSt.SetValue(str(para[3][0][3]))
+            self.InputValueTxtCtrlLinePN.SetValue(str(para[3][0][4]))
+            self.InputValueTxtCtrlLineRS.SetValue(str(para[3][0][1]))
+            self.InputValueTxtCtrlLineRE.SetValue(str(para[3][0][2]))
 
-            self.ChoiceForTestLineRGB.SetSelection(para['RSV-hMPV'][1][0])
-            self.InputValueTxtTestLineSt.SetValue(str(para['RSV-hMPV'][1][3]))
-            self.InputValueTxtTestLinePN.SetValue(str(para['RSV-hMPV'][1][4]))
-            self.InputValueTxtTestLineRS.SetValue(str(para['RSV-hMPV'][1][1]))
-            self.InputValueTxtTestLineRE.SetValue(str(para['RSV-hMPV'][1][2]))
+            self.ChoiceForTestLineRGB.SetSelection(para[3][1][0])
+            self.InputValueTxtTestLineSt.SetValue(str(para[3][1][3]))
+            self.InputValueTxtTestLinePN.SetValue(str(para[3][1][4]))
+            self.InputValueTxtTestLineRS.SetValue(str(para[3][1][1]))
+            self.InputValueTxtTestLineRE.SetValue(str(para[3][1][2]))
 
         if self.ChoiceForDisease.GetValue() == 'hMPV':
-            self.ChoiceForCtrlLineRGB.SetSelection(para['RSV-hMPV'][0][0])
+            self.ChoiceForCtrlLineRGB.SetSelection(para[3][0][0])
             self.InputValueTxtGamma.SetValue('2')
-            self.InputValueTxtCtrlLineSt.SetValue(str(para['RSV-hMPV'][0][3]))
-            self.InputValueTxtCtrlLinePN.SetValue(str(para['RSV-hMPV'][0][4]))
-            self.InputValueTxtCtrlLineRS.SetValue(str(para['RSV-hMPV'][0][1]))
-            self.InputValueTxtCtrlLineRE.SetValue(str(para['RSV-hMPV'][0][2]))
+            self.InputValueTxtCtrlLineSt.SetValue(str(para[3][0][3]))
+            self.InputValueTxtCtrlLinePN.SetValue(str(para[3][0][4]))
+            self.InputValueTxtCtrlLineRS.SetValue(str(para[3][0][1]))
+            self.InputValueTxtCtrlLineRE.SetValue(str(para[3][0][2]))
 
-            self.ChoiceForTestLineRGB.SetSelection(para['RSV-hMPV'][2][0])
-            self.InputValueTxtTestLineSt.SetValue(str(para['RSV-hMPV'][2][3]))
-            self.InputValueTxtTestLinePN.SetValue(str(para['RSV-hMPV'][2][4]))
-            self.InputValueTxtTestLineRS.SetValue(str(para['RSV-hMPV'][2][1]))
-            self.InputValueTxtTestLineRE.SetValue(str(para['RSV-hMPV'][2][2]))
+            self.ChoiceForTestLineRGB.SetSelection(para[3][2][0])
+            self.InputValueTxtTestLineSt.SetValue(str(para[3][2][3]))
+            self.InputValueTxtTestLinePN.SetValue(str(para[3][2][4]))
+            self.InputValueTxtTestLineRS.SetValue(str(para[3][2][1]))
+            self.InputValueTxtTestLineRE.SetValue(str(para[3][2][2]))
 
         if self.ChoiceForDisease.GetValue() == 'StrepA':
-            self.ChoiceForCtrlLineRGB.SetSelection(para['StrepA'][0][0])
+            self.ChoiceForCtrlLineRGB.SetSelection(para[4][0][0])
             self.InputValueTxtGamma.SetValue('2')
-            self.InputValueTxtCtrlLineSt.SetValue(str(para['StrepA'][0][3]))
-            self.InputValueTxtCtrlLinePN.SetValue(str(para['StrepA'][0][4]))
-            self.InputValueTxtCtrlLineRS.SetValue(str(para['StrepA'][0][1]))
-            self.InputValueTxtCtrlLineRE.SetValue(str(para['StrepA'][0][2]))
+            self.InputValueTxtCtrlLineSt.SetValue(str(para[4][0][3]))
+            self.InputValueTxtCtrlLinePN.SetValue(str(para[4][0][4]))
+            self.InputValueTxtCtrlLineRS.SetValue(str(para[4][0][1]))
+            self.InputValueTxtCtrlLineRE.SetValue(str(para[4][0][2]))
 
-            self.ChoiceForTestLineRGB.SetSelection(line_para_map['StrepA'][1][0])
-            self.InputValueTxtTestLineSt.SetValue(str(line_para_map['StrepA'][1][3]))
-            self.InputValueTxtTestLinePN.SetValue(str(line_para_map['StrepA'][1][4]))
-            self.InputValueTxtTestLineRS.SetValue(str(line_para_map['StrepA'][1][1]))
-            self.InputValueTxtTestLineRE.SetValue(str(line_para_map['StrepA'][1][2]))
+            self.ChoiceForTestLineRGB.SetSelection(para[4][1][0])
+            self.InputValueTxtTestLineSt.SetValue(str(para[4][1][3]))
+            self.InputValueTxtTestLinePN.SetValue(str(para[4][1][4]))
+            self.InputValueTxtTestLineRS.SetValue(str(para[4][1][1]))
+            self.InputValueTxtTestLineRE.SetValue(str(para[4][1][2]))
 
     def GeneratePN(self, event):
 
@@ -434,15 +525,15 @@ class DetectionPanel(BasePanel):
         ImgPathList = []
 
         if Disease=='Flu A':
-            NegPath='./samples/A/0'
+            NegPath='./samples/FluA/0'
         elif Disease=='Flu B':
-            NegPath='./samples/B/0'
+            NegPath='./samples/FluB/0'
         elif Disease=='Myco':
             NegPath='./samples/Myco/0'
         elif Disease == 'RSV':
-            NegPath='./samples/RSV/0'
+            NegPath='./samples/RSV-hMPV/0'
         elif Disease=='hMPV':
-            NegPath='./samples/hMPV/0'
+            NegPath='./samples/RSV-hMPV/0'
         else:
             NegPath='./samples/StrepA/0'
 
@@ -472,15 +563,11 @@ class DetectionPanel(BasePanel):
         line_parameters = [Ctrl_para, Test_para]
 
         if self.CheckBoxBlocks.GetValue()==True:
-            self.pn1, self.pn2 = calculateCutOffValue4Block(ImgPathList, line_parameters, self.CheckBoxEnhance.GetValue(), self.CheckBoxUseWhiteBalance.GetValue(), std_rate=int(self.StdValue.GetValue())) #Check
+            self.pn1, self.pn2 = calculateCutOffValue4Block(ImgPathList, line_parameters, self.CheckBoxEnhance.GetValue(), self.CheckBoxUseWhiteBalance.GetValue(), self.CheckBoxUseSmoothFilter.GetValue(), smoothing_value=int(self.ComboBoxSmoothFilter.GetValue()), std_rate=int(self.StdValue.GetValue())) #Check2
             self.InputValueTxtTestLinePN.SetValue(str(np.round(self.pn1, decimals=3)))
         else:
-            self.pn1, self.pn2 = calculateCutOffValue(ImgPathList, line_parameters, self.CheckBoxEnhance.GetValue(), self.CheckBoxUseWhiteBalance.GetValue(), self.CheckBoxUseWhiteBalance.GetValue(), std_rate=int(self.StdValue.GetValue())) #Check
+            self.pn1, self.pn2 = calculateCutOffValue(ImgPathList, line_parameters, self.CheckBoxEnhance.GetValue(), self.CheckBoxUseWhiteBalance.GetValue(), self.CheckBoxUseSmoothFilter.GetValue(), smoothing_value=int(self.ComboBoxSmoothFilter.GetValue()), std_rate=int(self.StdValue.GetValue())) #Check2
             self.InputValueTxtTestLinePN.SetValue(str(np.round(self.pn1, decimals=3)))
-
-
-
-
 
 
     def GeneratePN4Blocks(self):
@@ -529,14 +616,12 @@ class DetectionPanel(BasePanel):
             line_parameters = [Ctrl_para, Test_para]
 
             if self.CheckBoxBlocks.GetValue()==True:
-                self.pn1, self.pn2 = calculateCutOffValue4Block(ImgPathList, line_parameters, self.CheckBoxEnhance.GetValue(),self.CheckBoxUseWhiteBalance.GetValue(), std_rate=int(self.StdValue.GetValue())) #Check
+                self.pn1, self.pn2 = calculateCutOffValue4Block(ImgPathList, line_parameters, self.CheckBoxEnhance.GetValue(),self.CheckBoxUseWhiteBalance.GetValue(), self.CheckBoxUseSmoothFilter.GetValue(), smoothing_value=int(self.ComboBoxSmoothFilter.GetValue()), std_rate=int(self.StdValue.GetValue())) #Check2
                 self.InputValueTxtTestLinePN.SetValue(str(np.round(self.pn1, decimals=3)))
             else:
-                self.pn1, self.pn2 = calculateCutOffValue(ImgPathList, line_parameters, self.CheckBoxEnhance.GetValue(),self.CheckBoxUseWhiteBalance.GetValue(), std_rate=int(self.StdValue.GetValue()))#Check
+                self.pn1, self.pn2 = calculateCutOffValue(ImgPathList, line_parameters, self.CheckBoxEnhance.GetValue(),self.CheckBoxUseWhiteBalance.GetValue(), self.CheckBoxUseSmoothFilter.GetValue(), smoothing_value=int(self.ComboBoxSmoothFilter.GetValue()), std_rate=int(self.StdValue.GetValue()))#Check2
                 self.InputValueTxtTestLinePN.SetValue(str(np.round(self.pn1, decimals=3)))
-
             #self.ShowCalculatedPN.SetValue(str(np.round(self.pn1, decimals=3)))
-
         else:
             Disease = self.ChoiceForDisease.GetValue()
             if Disease=='Flu A':
@@ -565,7 +650,22 @@ class DetectionPanel(BasePanel):
         self.EnhanceImg.ClearAll()
 
         self.OriginalImg.AddObject(self.BitmapImg)
-        self.EnhanceImg.AddObject(self.EnhancedBitmapImg)
+        if self.CheckBoxEnhance.GetValue()==True:
+            self.EnhanceImg.AddObject(self.EnhancedBitmapImg)
+            print('Enhance')
+            if self.CheckBoxUseWhiteBalance.GetValue()==True:
+                self.EnhanceImg.ClearAll()
+                self.EnhanceImg.AddObject(self.EnhancedWhiteBalanceBitmapImg)
+                print('EnhanceWhite')
+            else:
+                pass
+        elif self.CheckBoxUseWhiteBalance.GetValue()==True:
+            self.EnhanceImg.ClearAll()
+            self.EnhanceImg.AddObject(self.WhiteBalanceBitmapImg)
+            print('EnhanceWhite')
+        else:
+            self.EnhanceImg.AddObject(self.BitmapImg)
+
         self.EnhanceImg.Draw(Force=True)
         self.OriginalImg.Draw(Force=True)
 
@@ -612,7 +712,7 @@ class DetectionPanel(BasePanel):
             self.TestLineMultiDFArr = self.img
 
         if self.CheckBoxEnhance.GetValue()==True and self.CheckBoxBlocks.GetValue() == False:
-            self.CtrlResult, self.result1, self.result2 = algorithm3_with_slope(self.img, self.line_para, True, self.CheckBoxUseWhiteBalance.GetValue(), self.CheckBoxUseFilter.GetValue(), True, False) #Check
+            self.CtrlResult, self.result1, self.result2 = algorithm3_with_slope(self.img, self.line_para, True, self.CheckBoxUseWhiteBalance.GetValue(), self.CheckBoxUseSmoothFilter.GetValue(), int(self.ComboBoxSmoothFilter.GetValue()), True, False) #Check
 
             if self.CtrlResult[0] == 1:
                 self.TestDFArr = self.result1[6]
@@ -629,7 +729,7 @@ class DetectionPanel(BasePanel):
                 self.TestMinValue = self.CtrlResult[5]
 
         elif self.CheckBoxEnhance.GetValue()==True and self.CheckBoxBlocks.GetValue() == True:
-            self.CtrlResult, self.result1, self.result2, self.test_result1_pred, self.test_result2_pred = algorithm3_with_slope_4block(self.img, self.line_para, True, self.CheckBoxUseWhiteBalance.GetValue() ,self.CheckBoxUseFilter.GetValue(), True, False, num_positive=int(self.BlockNum.GetValue())) #Check
+            self.CtrlResult, self.result1, self.result2, self.test_result1_pred, self.test_result2_pred = algorithm3_with_slope_4block(self.img, self.line_para, True, self.CheckBoxUseWhiteBalance.GetValue() ,self.CheckBoxUseSmoothFilter.GetValue(), int(self.ComboBoxSmoothFilter.GetValue()), True, False, num_positive=int(self.BlockNum.GetValue())) #Check
             if self.CtrlResult[0] == 1:
                 pass
             else:
@@ -641,7 +741,7 @@ class DetectionPanel(BasePanel):
             self.SetBoundaryLineForBlocks(self.OriginalImg, self.EnhanceImg, int(self.InputValueTxtTestLineRS.GetValue()), int(self.InputValueTxtTestLineRE.GetValue()))
 
         elif self.CheckBoxEnhance.GetValue() == False and self.CheckBoxBlocks.GetValue() == False:
-            self.CtrlResult, self.result1, self.result2 = algorithm3_with_slope(self.img, self.line_para, False, self.CheckBoxUseWhiteBalance.GetValue(), self.CheckBoxUseFilter.GetValue(), True, False) #Check
+            self.CtrlResult, self.result1, self.result2 = algorithm3_with_slope(self.img, self.line_para, False, self.CheckBoxUseWhiteBalance.GetValue(), self.CheckBoxUseSmoothFilter.GetValue(), int(self.ComboBoxSmoothFilter.GetValue()), True, False) #Check
             if self.CtrlResult[0] == 1:
                 self.TestDFArr = self.result1[6]
                 self.TestMaxIndex = self.result1[2]
@@ -657,7 +757,214 @@ class DetectionPanel(BasePanel):
                 self.TestMinValue = self.CtrlResult[5]
 
         else:# self.CheckBoxEnhance.GetValue() == False and self.CheckBoxBlocks.GetValue() == True:
-            self.CtrlResult, self.result1, self.result2, self.test_result1_pred, self.test_result2_pred = algorithm3_with_slope_4block(self.img, self.line_para, False, self.CheckBoxUseWhiteBalance.GetValue(), self.CheckBoxUseFilter.GetValue(), True, False, num_positive=int(self.BlockNum.GetValue())) #Check
+            self.CtrlResult, self.result1, self.result2, self.test_result1_pred, self.test_result2_pred = algorithm3_with_slope_4block(self.img, self.line_para, False, self.CheckBoxUseWhiteBalance.GetValue(), self.CheckBoxUseSmoothFilter.GetValue(), int(self.ComboBoxSmoothFilter.GetValue()), True, False, num_positive=int(self.BlockNum.GetValue())) #Check
+            if self.CtrlResult[0] == 1:
+                pass
+            else:
+                self.TestDFArr = self.CtrlResult[6]
+                self.TestMaxIndex = self.CtrlResult[2]
+                self.TestMaxValue = self.CtrlResult[3]
+                self.TestMinIndex = self.CtrlResult[4]
+                self.TestMinValue = self.CtrlResult[5]
+            self.SetBoundaryLineForBlocks(self.OriginalImg, self.EnhanceImg, int(self.InputValueTxtTestLineRS.GetValue()), int(self.InputValueTxtTestLineRE.GetValue()))
+
+
+        if self.CtrlResult[0]==1:
+            self.ctrl_result = 'Positive'
+        else:
+            self.ctrl_result = 'Negative'
+
+        CtrlMaxValue = np.around(self.CtrlResult[3], decimals=3)
+        CtrlMinValue = np.around(self.CtrlResult[5], decimals=3)
+        CtrlMaxPeak = np.around(self.CtrlResult[1], decimals=3)
+
+        if self.ctrl_result == 'Positive':
+            #CtrlString = 'Result :'+self.ctrl_result+'\n'+'Max Value :'+str(CtrlMaxValue)+'\n'+'Mini Value :'+str(CtrlMinValue)+'\n'+'MaxPeak :'+str(CtrlMaxPeak)
+            self.CtrlLineResult.SetValue(self.ctrl_result)
+            self.CtrlLineMaxValue.SetValue(str(CtrlMaxValue))
+            self.CtrlLineMinValue.SetValue(str(CtrlMinValue))
+            self.CtrlLineMaxPeak.SetValue(str(CtrlMaxPeak))
+        else:
+            CtrlString = 'Result :'+'Control Line ERROR'+'\n'+'Max Value :'+str(CtrlMaxValue)+'\n'+'Mini Value :'+str(CtrlMinValue)+'\n'+'MaxPeak :'+str(CtrlMaxPeak)
+            self.CtrlLineResult.SetValue('Control Line ERROR')
+            self.CtrlLineMaxValue.SetValue(str(CtrlMaxValue))
+            self.CtrlLineMinValue.SetValue(str(CtrlMinValue))
+            self.CtrlLineMaxPeak.SetValue(str(CtrlMaxPeak))
+            self.ResultText.SetLabel('Result : Control Line ERROR')
+        #4色統計圖
+        self.ShowOriginalImgChartForCtrlLine(self.Ctrl_start_interval, self.Ctrl_end_interval, 0, 250)
+        self.ShowOriginalImgChartForTestLine(self.Test_start_interval, self.Test_end_interval, 0, 250)
+        self.ShowEnhancedImgChartForCtrlLine(self.Ctrl_start_interval, self.Ctrl_end_interval, 0, 250)
+        self.ShowEnhancedImgChartForTestLine(self.Test_start_interval, self.Test_end_interval, 0, 250)
+
+
+    def TestLine(self, event):
+        self.CtrlLine()
+
+        if self.ctrl_result == 'Positive':
+            if self.CheckBoxBlocks.GetValue() == True and self.CheckBoxEnhance.GetValue() == True:
+                self.Rect5.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.Block5Event)
+                self.Rect6.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.Block6Event)
+                self.Rect7.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.Block7Event)
+                self.Rect8.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.Block8Event)
+                self.PlotCtrlLineBoundary()
+                if self.test_result1_pred == 1:
+                    self.FinalTestResult = 'Positive'
+                else:
+                    self.FinalTestResult = 'Negative'
+                self.ResultText.SetLabel('Result : ' + self.FinalTestResult)
+                self.SlopeStatisticsChartForCtrlLine(self.Ctrl_color, self.Ctrl_start_interval, self.Ctrl_end_interval, -20, 20)
+            elif self.CheckBoxBlocks.GetValue() == True and self.CheckBoxEnhance.GetValue() == False:
+                self.Rect1.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.Block1Event)
+                self.Rect2.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.Block2Event)
+                self.Rect3.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.Block3Event)
+                self.Rect4.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.Block4Event)
+                self.PlotCtrlLineBoundary()
+                if self.test_result1_pred == 1:
+                    self.FinalTestResult = 'Positive'
+                else:
+                    self.FinalTestResult = 'Negative'
+                self.ResultText.SetLabel('Result : ' + self.FinalTestResult)
+                self.SlopeStatisticsChartForCtrlLine(self.Ctrl_color, self.Ctrl_start_interval, self.Ctrl_end_interval, -20, 20)
+            else:
+                print(np.mean(self.TestDFArr))
+                self.SlopeStatisticsChartForCtrlLine(self.Ctrl_color, self.Ctrl_start_interval, self.Ctrl_end_interval, -20, 20)
+                self.SlopeStatisticsChartForTestLine(self.Test_color, self.Test_start_interval, self.Test_end_interval, -20, 20)
+                TestString = 'Result :' + self.FinalTestResult + '\n' + 'Max Value :' + str(np.round(self.result1[3], decimals=3)) + '\n' + 'Mini Value :' + str(np.round(self.result1[5], decimals=3)) + '\n' + 'MaxPeak :' + str(np.round(self.result1[1], decimals=3))
+                self.ResultText.SetLabel('Result : ' + self.FinalTestResult)
+                self.TestLineResult.SetValue(self.FinalTestResult)
+                self.TestLineMaxValueText.SetValue(str(np.round(self.result1[3], decimals=3)))
+                self.TestLineMinValueText.SetValue(str(np.round(self.result1[5], decimals=3)))
+                self.TestLineMaxPeakText.SetValue(str(np.round(self.result1[1], decimals=3)))
+                self.PlotCtrlLineBoundary()
+                self.PlotTestLineBoundary()
+        else:
+            # print(np.mean(self.TestDFArr))
+            self.PlotCtrlLineBoundary()
+            #self.PlotTestLineBoundary()
+            self.SlopeStatisticsChartForCtrlLine(self.Ctrl_color, self.Ctrl_start_interval, self.Ctrl_end_interval, -20,20)
+            self.SlopeStatisticsChartForTestLine(self.Test_color, self.Ctrl_start_interval, self.Ctrl_end_interval, -20,20)
+            self.TextTestLineResult.SetValue('')
+
+
+    def CtrlLineWithComboBox(self):
+        self.OriginalImgFig.clf()
+        self.EnhancedImgFig.clf()
+        #self.SlopeFigure.clf()
+        self.SlopeFigure = Figure()
+        self.SlopeFigureChart = FigureCanvas(self.SlopeStatisticsPanel, -1, self.SlopeFigure)
+
+        self.OriginalImg.ClearAll()
+        self.EnhanceImg.ClearAll()
+
+        self.OriginalImg.AddObject(self.BitmapImg)
+        if self.CheckBoxEnhance.GetValue()==True:
+            self.EnhanceImg.AddObject(self.EnhancedBitmapImg)
+            print('Enhance')
+            if self.CheckBoxUseWhiteBalance.GetValue()==True:
+                self.EnhanceImg.ClearAll()
+                self.EnhanceImg.AddObject(self.EnhancedWhiteBalanceBitmapImg)
+                print('EnhanceWhite')
+            else:
+                pass
+        elif self.CheckBoxUseWhiteBalance.GetValue()==True:
+            self.EnhanceImg.AddObject(self.WhiteBalanceBitmapImg)
+            print('EnhanceWhite')
+        else:
+            self.EnhanceImg.AddObject(self.BitmapImg)
+
+        self.EnhanceImg.Draw(Force=True)
+        self.OriginalImg.Draw(Force=True)
+
+        #讀取圖片
+        im = cv2.imdecode(np.fromfile(self.ImgPath, dtype=np.uint8), -1)
+        im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
+        self.img = im
+
+        self.Ctrl_stride_threshold = int(self.InputValueTxtCtrlLineSt.GetValue())
+        self.Ctrl_PN_Threshold = float(self.InputValueTxtCtrlLinePN.GetValue())
+        self.Ctrl_start_interval = int(self.InputValueTxtCtrlLineRS.GetValue())
+        self.Ctrl_end_interval = int(self.InputValueTxtCtrlLineRE.GetValue())
+        self.Ctrl_RGB_Index = self.ChoiceForCtrlLineRGB.GetCurrentSelection()
+
+        self.Test_stride_threshold = int(self.InputValueTxtTestLineSt.GetValue())
+        self.Test_PN_Threshold = float(self.InputValueTxtTestLinePN.GetValue())
+        self.Test_start_interval = int(self.InputValueTxtTestLineRS.GetValue())
+        self.Test_end_interval = int(self.InputValueTxtTestLineRE.GetValue())
+        self.Test_RGB_Index = self.ChoiceForTestLineRGB.GetCurrentSelection()
+
+        if self.Ctrl_RGB_Index == 0:
+            self.Ctrl_color = 'red'
+        elif self.Ctrl_RGB_Index == 1:
+            self.Ctrl_color = 'green'
+        else:
+            self.Ctrl_color = 'blue'
+
+        if self.Test_RGB_Index == 0:
+            self.Test_color = 'red'
+        elif self.Test_RGB_Index == 1:
+            self.Test_color = 'green'
+        else:
+            self.Test_color = 'blue'
+
+        #宣告parameters參數
+        self.Ctrl_para = [self.Ctrl_RGB_Index, self.Ctrl_start_interval, self.Ctrl_end_interval, self.Ctrl_stride_threshold, self.Ctrl_PN_Threshold]
+        self.Test_para = [self.Test_RGB_Index, self.Test_start_interval, self.Test_end_interval, self.Test_stride_threshold, self.Test_PN_Threshold]
+        self.line_para = [self.Ctrl_para, self.Test_para]
+
+        #宣告TestDFArr
+        if self.CheckBoxEnhance.GetValue()==True:
+            self.TestLineMultiDFArr = gamma_enhance(self.img)
+        else:
+            self.TestLineMultiDFArr = self.img
+
+        if self.CheckBoxEnhance.GetValue()==True and self.CheckBoxBlocks.GetValue() == False:
+            self.CtrlResult, self.result1, self.result2 = algorithm3_with_slope(self.img, self.line_para, True, self.CheckBoxUseWhiteBalance.GetValue(), self.CheckBoxUseSmoothFilter.GetValue(), int(self.ComboBoxSmoothFilter.GetValue()), True, False) #Check
+
+            if self.CtrlResult[0] == 1:
+                self.TestDFArr = self.result1[6]
+                self.TestMaxIndex = self.result1[2]
+                self.TestMaxValue = self.result1[3]
+                self.TestMinIndex = self.result1[4]
+                self.TestMinValue = self.result1[5]
+                self.FinalTestResult = self.ResultTextConvert(self.result1[0])
+            else:
+                self.TestDFArr = self.CtrlResult[6]
+                self.TestMaxIndex = self.CtrlResult[2]
+                self.TestMaxValue = self.CtrlResult[3]
+                self.TestMinIndex = self.CtrlResult[4]
+                self.TestMinValue = self.CtrlResult[5]
+
+        elif self.CheckBoxEnhance.GetValue()==True and self.CheckBoxBlocks.GetValue() == True:
+            self.CtrlResult, self.result1, self.result2, self.test_result1_pred, self.test_result2_pred = algorithm3_with_slope_4block(self.img, self.line_para, True, self.CheckBoxUseWhiteBalance.GetValue() ,self.CheckBoxUseSmoothFilter.GetValue(), int(self.ComboBoxSmoothFilter.GetValue()), True, False, num_positive=int(self.BlockNum.GetValue())) #Check
+            if self.CtrlResult[0] == 1:
+                pass
+            else:
+                self.TestDFArr = self.CtrlResult[6]
+                self.TestMaxIndex = self.CtrlResult[2]
+                self.TestMaxValue = self.CtrlResult[3]
+                self.TestMinIndex = self.CtrlResult[4]
+                self.TestMinValue = self.CtrlResult[5]
+            self.SetBoundaryLineForBlocks(self.OriginalImg, self.EnhanceImg, int(self.InputValueTxtTestLineRS.GetValue()), int(self.InputValueTxtTestLineRE.GetValue()))
+
+        elif self.CheckBoxEnhance.GetValue() == False and self.CheckBoxBlocks.GetValue() == False:
+            self.CtrlResult, self.result1, self.result2 = algorithm3_with_slope(self.img, self.line_para, False, self.CheckBoxUseWhiteBalance.GetValue(), self.CheckBoxUseSmoothFilter.GetValue(), int(self.ComboBoxSmoothFilter.GetValue()), True, False) #Check
+            if self.CtrlResult[0] == 1:
+                self.TestDFArr = self.result1[6]
+                self.TestMaxIndex = self.result1[2]
+                self.TestMaxValue = self.result1[3]
+                self.TestMinIndex = self.result1[4]
+                self.TestMinValue = self.result1[5]
+                self.FinalTestResult = self.ResultTextConvert(self.result1[0])
+            else:
+                self.TestDFArr = self.CtrlResult[6]
+                self.TestMaxIndex = self.CtrlResult[2]
+                self.TestMaxValue = self.CtrlResult[3]
+                self.TestMinIndex = self.CtrlResult[4]
+                self.TestMinValue = self.CtrlResult[5]
+
+        else:# self.CheckBoxEnhance.GetValue() == False and self.CheckBoxBlocks.GetValue() == True:
+            self.CtrlResult, self.result1, self.result2, self.test_result1_pred, self.test_result2_pred = algorithm3_with_slope_4block(self.img, self.line_para, False, self.CheckBoxUseWhiteBalance.GetValue(), self.CheckBoxUseSmoothFilter.GetValue(), int(self.ComboBoxSmoothFilter.GetValue()), True, False, num_positive=int(self.BlockNum.GetValue())) #Check
             if self.CtrlResult[0] == 1:
                 pass
             else:
@@ -691,9 +998,8 @@ class DetectionPanel(BasePanel):
         self.ShowEnhancedImgChartForCtrlLine(self.Ctrl_start_interval, self.Ctrl_end_interval, 0, 250)
         self.ShowEnhancedImgChartForTestLine(self.Test_start_interval, self.Test_end_interval, 0, 250)
 
-
-    def TestLine(self, event):
-        self.CtrlLine()
+    def TestLineWithEnhanceComboBox(self, event):
+        self.CtrlLineWithComboBox()
 
         if self.ctrl_result == 'Positive':
             if self.CheckBoxBlocks.GetValue() == True and self.CheckBoxEnhance.GetValue() == True:
@@ -707,7 +1013,8 @@ class DetectionPanel(BasePanel):
                 else:
                     self.FinalTestResult = 'Negative'
                 self.ResultText.SetLabel('Result : ' + self.FinalTestResult)
-                self.SlopeStatisticsChartForCtrlLine(self.Ctrl_color, self.Ctrl_start_interval, self.Ctrl_end_interval,
+                self.SlopeStatisticsChartForCtrlLine(self.Ctrl_color, self.Ctrl_start_interval,
+                                                     self.Ctrl_end_interval,
                                                      -20, 20)
             elif self.CheckBoxBlocks.GetValue() == True and self.CheckBoxEnhance.GetValue() == False:
                 self.Rect1.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.Block1Event)
@@ -720,12 +1027,18 @@ class DetectionPanel(BasePanel):
                 else:
                     self.FinalTestResult = 'Negative'
                 self.ResultText.SetLabel('Result : ' + self.FinalTestResult)
-                self.SlopeStatisticsChartForCtrlLine(self.Ctrl_color, self.Ctrl_start_interval, self.Ctrl_end_interval, -20, 20)
+                self.SlopeStatisticsChartForCtrlLine(self.Ctrl_color, self.Ctrl_start_interval,
+                                                     self.Ctrl_end_interval, -20, 20)
             else:
                 print(np.mean(self.TestDFArr))
-                self.SlopeStatisticsChartForCtrlLine(self.Ctrl_color, self.Ctrl_start_interval, self.Ctrl_end_interval, -20, 20)
-                self.SlopeStatisticsChartForTestLine(self.Test_color, self.Test_start_interval, self.Test_end_interval, -20, 20)
-                TestString = 'Result :' + self.FinalTestResult + '\n' + 'Max Value :' + str(np.round(self.result1[3], decimals=3)) + '\n' + 'Mini Value :' + str(np.round(self.result1[5], decimals=3)) + '\n' + 'MaxPeak :' + str(np.round(self.result1[1], decimals=3))
+                self.SlopeStatisticsChartForCtrlLine(self.Ctrl_color, self.Ctrl_start_interval,
+                                                     self.Ctrl_end_interval, -20, 20)
+                self.SlopeStatisticsChartForTestLine(self.Test_color, self.Test_start_interval,
+                                                     self.Test_end_interval, -20, 20)
+                TestString = 'Result :' + self.FinalTestResult + '\n' + 'Max Value :' + str(
+                    np.round(self.result1[3], decimals=3)) + '\n' + 'Mini Value :' + str(
+                    np.round(self.result1[5], decimals=3)) + '\n' + 'MaxPeak :' + str(
+                    np.round(self.result1[1], decimals=3))
                 self.ResultText.SetLabel('Result : ' + self.FinalTestResult)
                 self.TextTestLineResult.SetValue(TestString)
                 self.PlotCtrlLineBoundary()
@@ -733,77 +1046,67 @@ class DetectionPanel(BasePanel):
         else:
             # print(np.mean(self.TestDFArr))
             self.PlotCtrlLineBoundary()
-            #self.PlotTestLineBoundary()
-            self.SlopeStatisticsChartForCtrlLine(self.Ctrl_color, self.Ctrl_start_interval, self.Ctrl_end_interval, -20,20)
-            self.SlopeStatisticsChartForTestLine(self.Test_color, self.Ctrl_start_interval, self.Ctrl_end_interval, -20,20)
+            # self.PlotTestLineBoundary()
+            self.SlopeStatisticsChartForCtrlLine(self.Ctrl_color, self.Ctrl_start_interval, self.Ctrl_end_interval,
+                                                 -20, 20)
+            self.SlopeStatisticsChartForTestLine(self.Test_color, self.Ctrl_start_interval, self.Ctrl_end_interval,
+                                                 -20, 20)
+            self.TextTestLineResult.SetValue('')
 
+    def TestLineWithWhiteBlanceComboBox(self, event):
+        self.CtrlLineWithComboBox()
 
-    # def Calculate(self, event):
-    #     abspath = []
-    #     MaxPeak = []
-    #     rsTestLine = int(self.InputValueTxtTestLineRS.GetValue())
-    #     reTestLine = int(self.InputValueTxtTestLineRE.GetValue())
-    #     stTestLine = int(self.InputValueTxtTestLineSt.GetValue())
-    #     pnTestLine = float(self.InputValueTxtTestLinePN.GetValue())
-    #     rgbTestLineIndex = self.ChoiceForTestLineRGB.GetSelection()
-    #     disease = self.ChoiceForDisease.GetValue()
-    #
-    #     rsCtrlLine = int(self.InputValueTxtCtrlLineRS.GetValue())
-    #     reCtrlLine = int(self.InputValueTxtCtrlLineRE.GetValue())
-    #     stCtrlLine = int(self.InputValueTxtCtrlLineSt.GetValue())
-    #     pnCtrlLine = float(self.InputValueTxtCtrlLinePN.GetValue())
-    #
-    #     CtrlPara = [rgbTestLineIndex, rsCtrlLine, reCtrlLine, stCtrlLine, pnCtrlLine]
-    #     TestPara = [rgbTestLineIndex, rsTestLine, reTestLine, stTestLine, pnTestLine]
-    #
-    #     if disease == 'Flu A':
-    #         self.path = './samples/A/0'
-    #         rgbCtrlLineIndex = 2
-    #     elif disease == 'Flu B':
-    #         self.path = './samples/B/0'
-    #         rgbCtrlLineIndex = 2
-    #     elif disease == 'Myco':
-    #         self.path = './samples/Myco/0'
-    #         rgbCtrlLineIndex = 1
-    #     elif disease == 'RSV':
-    #         self.path = './samples/RSV/0'
-    #         rgbCtrlLineIndex = 1
-    #     elif disease == 'StrepA':
-    #         self.path = './samples/StrepA/0'
-    #         rgbCtrlLineIndex = 1
-    #     else:
-    #         self.path = './samples/hMPV/0'
-    #         rgbCtrlLineIndex = 1
-    #
-    #     for dirPath, dirNames, fileNames in os.walk(self.path):
-    #         dirPath = dirPath.replace('\\', '/')
-    #         for f in fileNames:
-    #             fartherPath = str(os.path.join(dirPath, f)).replace('\\', '/')
-    #             if os.path.isfile(fartherPath):
-    #                 abspath.append(fartherPath)
-    #             else:
-    #                 pass
-    #
-    #     for i in range(len(abspath)):
-    #         img = Image.open(abspath[i])
-    #         img = np.array(img)
-    #         img = np.power(img / float(np.max(img)), 2) * float(np.max(img))
-    #         result, max_different, max_index, max_value, min_index, min_value, df_array = find_peak(img, CtrlPara, self.useFilter, True, True)
-    #
-    #         if result == 1:
-    #             result, max_different, max_index, max_value, min_index, min_value, df_array = find_peak(img, TestPara, self.useFilter, True, True)
-    #             MaxPeak.append(max_different)
-    #         else:
-    #             pass
-    #
-    #     MaxPeak = np.asarray(MaxPeak)
-    #     stdMaxPeak = np.std(MaxPeak)
-    #     meanMaxPeak = np.mean(MaxPeak)
-    #     recommendPN = meanMaxPeak + 2*stdMaxPeak
-    #     recommendPN = (Decimal(recommendPN).quantize(Decimal('0.000')))
-    #     recommendPN = str(recommendPN)
-    #
-    #     self.InputValueTxtTestLinePN.SetValue(recommendPN)
+        if self.ctrl_result == 'Positive':
+            if self.CheckBoxBlocks.GetValue() == True and self.CheckBoxEnhance.GetValue() == True:
+                self.Rect5.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.Block5Event)
+                self.Rect6.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.Block6Event)
+                self.Rect7.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.Block7Event)
+                self.Rect8.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.Block8Event)
+                self.PlotCtrlLineBoundary()
+                if self.test_result1_pred == 1:
+                    self.FinalTestResult = 'Positive'
+                else:
+                    self.FinalTestResult = 'Negative'
+                self.ResultText.SetLabel('Result : ' + self.FinalTestResult)
+                self.SlopeStatisticsChartForCtrlLine(self.Ctrl_color, self.Ctrl_start_interval,
+                                                     self.Ctrl_end_interval,
+                                                     -20, 20)
+            elif self.CheckBoxBlocks.GetValue() == True and self.CheckBoxEnhance.GetValue() == False:
+                self.Rect1.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.Block1Event)
+                self.Rect2.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.Block2Event)
+                self.Rect3.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.Block3Event)
+                self.Rect4.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.Block4Event)
+                self.PlotCtrlLineBoundary()
+                if self.test_result1_pred == 1:
+                    self.FinalTestResult = 'Positive'
+                else:
+                    self.FinalTestResult = 'Negative'
+                self.ResultText.SetLabel('Result : ' + self.FinalTestResult)
+                self.SlopeStatisticsChartForCtrlLine(self.Ctrl_color, self.Ctrl_start_interval,
+                                                     self.Ctrl_end_interval, -20, 20)
+            else:
+                print(np.mean(self.TestDFArr))
+                self.SlopeStatisticsChartForCtrlLine(self.Ctrl_color, self.Ctrl_start_interval,
+                                                     self.Ctrl_end_interval, -20, 20)
+                self.SlopeStatisticsChartForTestLine(self.Test_color, self.Test_start_interval,
+                                                     self.Test_end_interval, -20, 20)
+                TestString = 'Result :' + self.FinalTestResult + '\n' + 'Max Value :' + str(
+                    np.round(self.result1[3], decimals=3)) + '\n' + 'Mini Value :' + str(
+                    np.round(self.result1[5], decimals=3)) + '\n' + 'MaxPeak :' + str(
+                    np.round(self.result1[1], decimals=3))
+                self.ResultText.SetLabel('Result : ' + self.FinalTestResult)
+                self.TextTestLineResult.SetValue(TestString)
+                self.PlotCtrlLineBoundary()
+                self.PlotTestLineBoundary()
+        else:
+            # print(np.mean(self.TestDFArr))
+            self.PlotCtrlLineBoundary()
+            # self.PlotTestLineBoundary()
+            self.SlopeStatisticsChartForCtrlLine(self.Ctrl_color, self.Ctrl_start_interval, self.Ctrl_end_interval,
+                                                 -20, 20)
+            self.SlopeStatisticsChartForTestLine(self.Test_color, self.Ctrl_start_interval, self.Ctrl_end_interval,
+                                                 -20, 20)
+            self.TextTestLineResult.SetValue('')
 ####################################################Drawing Chart###################################################################
     def ShowOriginalImgChartForCtrlLine(self, start_interval, end_interval, y_start, y_end):
         df = self.ShowPlot(self.img)
@@ -1099,9 +1402,11 @@ class DetectionPanel(BasePanel):
         self.TestMinIndex = self.result1[3][4]
         self.TestMinValue = self.result1[3][5]
         if self.ctrl_result == 'Positive':
-
             self.SlopeStatisticsChartForTestLine(self.Test_color, self.Test_start_interval, self.Test_end_interval, y_start=-20, y_end=20)
-            self.TextTestLineResult.SetValue(TestString)
+            self.TestLineResult.SetValue(Result)
+            self.TestLineMaxValueText.SetValue(TestMaxValue)
+            self.TestLineMinValueText.SetValue(TestMinValue)
+            self.TestLineMaxPeakText.SetValue(TestMaxDiff)
         else:
             pass
 
@@ -1133,10 +1438,11 @@ class DetectionPanel(BasePanel):
         self.TestMinValue = self.result1[2][5]
 
         if self.ctrl_result == 'Positive':
-
-            self.SlopeStatisticsChartForTestLine(self.Test_color, self.Test_start_interval, self.Test_end_interval,
-                                                 y_start=-20, y_end=20)
-            self.TextTestLineResult.SetValue(TestString)
+            self.SlopeStatisticsChartForTestLine(self.Test_color, self.Test_start_interval, self.Test_end_interval, y_start=-20, y_end=20)
+            self.TestLineResult.SetValue(Result)
+            self.TestLineMaxValueText.SetValue(TestMaxValue)
+            self.TestLineMinValueText.SetValue(TestMinValue)
+            self.TestLineMaxPeakText.SetValue(TestMaxDiff)
         else:
             pass
 
@@ -1171,12 +1477,13 @@ class DetectionPanel(BasePanel):
 
         if self.ctrl_result == 'Positive':
 
-            self.SlopeStatisticsChartForTestLine(self.Test_color, self.Test_start_interval, self.Test_end_interval,
-                                                 y_start=-20, y_end=20)
-            self.TextTestLineResult.SetValue(TestString)
+            self.SlopeStatisticsChartForTestLine(self.Test_color, self.Test_start_interval, self.Test_end_interval, y_start=-20, y_end=20)
+            self.TestLineResult.SetValue(Result)
+            self.TestLineMaxValueText.SetValue(TestMaxValue)
+            self.TestLineMinValueText.SetValue(TestMinValue)
+            self.TestLineMaxPeakText.SetValue(TestMaxDiff)
         else:
             pass
-
 
 
     def Block4Event(self, event):
@@ -1209,9 +1516,11 @@ class DetectionPanel(BasePanel):
 
         if self.ctrl_result == 'Positive':
 
-            self.SlopeStatisticsChartForTestLine(self.Test_color, self.Test_start_interval, self.Test_end_interval,
-                                                 y_start=-20, y_end=20)
-            self.TextTestLineResult.SetValue(TestString)
+            self.SlopeStatisticsChartForTestLine(self.Test_color, self.Test_start_interval, self.Test_end_interval, y_start=-20, y_end=20)
+            self.TestLineResult.SetValue(Result)
+            self.TestLineMaxValueText.SetValue(TestMaxValue)
+            self.TestLineMinValueText.SetValue(TestMinValue)
+            self.TestLineMaxPeakText.SetValue(TestMaxDiff)
         else:
             pass
 
@@ -1246,7 +1555,10 @@ class DetectionPanel(BasePanel):
 
         if self.ctrl_result == 'Positive':
             self.SlopeStatisticsChartForTestLine(self.Test_color, self.Test_start_interval, self.Test_end_interval, y_start=-20, y_end=20)
-            self.TextTestLineResult.SetValue(TestString)
+            self.TestLineResult.SetValue(Result)
+            self.TestLineMaxValueText.SetValue(TestMaxValue)
+            self.TestLineMinValueText.SetValue(TestMinValue)
+            self.TestLineMaxPeakText.SetValue(TestMaxDiff)
         else:
             pass
 
@@ -1281,12 +1593,13 @@ class DetectionPanel(BasePanel):
 
         if self.ctrl_result == 'Positive':
 
-            self.SlopeStatisticsChartForTestLine(self.Test_color, self.Test_start_interval, self.Test_end_interval,
-                                                 y_start=-20, y_end=20)
-            self.TextTestLineResult.SetValue(TestString)
+            self.SlopeStatisticsChartForTestLine(self.Test_color, self.Test_start_interval, self.Test_end_interval, y_start=-20, y_end=20)
+            self.TestLineResult.SetValue(Result)
+            self.TestLineMaxValueText.SetValue(TestMaxValue)
+            self.TestLineMinValueText.SetValue(TestMinValue)
+            self.TestLineMaxPeakText.SetValue(TestMaxDiff)
         else:
             pass
-
 
 
     def Block7Event(self, event):
@@ -1318,13 +1631,13 @@ class DetectionPanel(BasePanel):
         self.TestMinValue = self.result1[1][5]
 
         if self.ctrl_result == 'Positive':
-
-            self.SlopeStatisticsChartForTestLine(self.Test_color, self.Test_start_interval, self.Test_end_interval,
-                                                 y_start=-20, y_end=20)
-            self.TextTestLineResult.SetValue(TestString)
+            self.SlopeStatisticsChartForTestLine(self.Test_color, self.Test_start_interval, self.Test_end_interval, y_start=-20, y_end=20)
+            self.TestLineResult.SetValue(Result)
+            self.TestLineMaxValueText.SetValue(TestMaxValue)
+            self.TestLineMinValueText.SetValue(TestMinValue)
+            self.TestLineMaxPeakText.SetValue(TestMaxDiff)
         else:
             pass
-
 
 
     def Block8Event(self, event):
@@ -1357,69 +1670,71 @@ class DetectionPanel(BasePanel):
 
         if self.ctrl_result == 'Positive':
 
-            self.SlopeStatisticsChartForTestLine(self.Test_color, self.Test_start_interval, self.Test_end_interval,
-                                                 y_start=-20, y_end=20)
-            self.TextTestLineResult.SetValue(TestString)
+            self.SlopeStatisticsChartForTestLine(self.Test_color, self.Test_start_interval, self.Test_end_interval, y_start=-20, y_end=20)
+            self.TestLineResult.SetValue(Result)
+            self.TestLineMaxValueText.SetValue(TestMaxValue)
+            self.TestLineMinValueText.SetValue(TestMinValue)
+            self.TestLineMaxPeakText.SetValue(TestMaxDiff)
         else:
             pass
 
 
 ####################################################################################################################################
-    def GetCurrentPar(self):
-        #Get Ctrl Para
-        CtrlRGB_Index = self.ChoiceForCtrlLineRGB.GetCurrentSelection()
-        Ctrlst = self.InputValueTxtCtrlLineSt.GetValue()
-        Ctrlpn = self.InputValueTxtCtrlLinePN.GetValue()
-        CtrlRS = self.InputValueTxtCtrlLineRS.GetValue()
-        CtrlRE = self.InputValueTxtCtrlLineRE.GetValue()
-        # Get Test Para
-        TestRGB_Index = self.ChoiceForTestLineRGB.GetCurrentSelection()
-        Testst = self.InputValueTxtTestLineSt.GetValue()
-        Testpn = self.InputValueTxtTestLinePN.GetValue()
-        TestRS = self.InputValueTxtTestLineRS.GetValue()
-        TestRE = self.InputValueTxtTestLineRE.GetValue()
-
-        if CtrlRGB_Index == 0:
-            Ctrlcolor = 'red'
-        elif CtrlRGB_Index == 1:
-            Ctrlcolor = 'green'
-        elif CtrlRGB_Index == 2:
-            Ctrlcolor = 'blue'
-
-        if TestRGB_Index == 0:
-            Testcolor = 'red'
-        elif TestRGB_Index == 1:
-            Testcolor = 'green'
-        elif TestRGB_Index == 2:
-            Testcolor = 'blue'
-        '''Call function'''
-        return CtrlRGB_Index, Ctrlst, Ctrlpn, CtrlRS, CtrlRE, Ctrlcolor, TestRGB_Index, Testst, Testpn, TestRS, TestRE, Testcolor
-
-    def GetDiseaseParams(self):
-        Ctrlrgb_Index, Ctrlst, Ctrlpn, CtrlRS, CtrlRE, Ctrlcolor, Testrgb_Index, Testst, Testpn, TestRS, TestRE, Testcolor = self.GetCurrentPar()
-        #gamma = self.gamma
-        disease = self.ChoiceForDisease.GetValue()
-        params = DiseaseParams()
-        #Ctrl Para
-        params.CtrlRGB_Index = Ctrlrgb_Index
-        params.Ctrlst = Ctrlst
-        params.Ctrlpn = Ctrlpn
-        params.CtrlRS = CtrlRS
-        params.CtrlRE = CtrlRE
-        params.Ctrlcolor = Ctrlcolor
-        #Test Para
-        params.TestRGB_Index = Testrgb_Index
-        params.Testst = Testst
-        params.Testpn = Testpn
-        params.TestRS = TestRS
-        params.TestRE = TestRE
-        params.Testcolor = Testcolor
-
-        params.disease = disease
-        params.useFilter = self.useFilter
-        params.usePeakDetection = True
-        params.useEnhance = self.CheckBoxEnhance.GetValue()
-        return params
-
-    def SetDiseaseParams(self, params):
-        pass
+    # def GetCurrentPar(self):
+    #     #Get Ctrl Para
+    #     CtrlRGB_Index = self.ChoiceForCtrlLineRGB.GetCurrentSelection()
+    #     Ctrlst = self.InputValueTxtCtrlLineSt.GetValue()
+    #     Ctrlpn = self.InputValueTxtCtrlLinePN.GetValue()
+    #     CtrlRS = self.InputValueTxtCtrlLineRS.GetValue()
+    #     CtrlRE = self.InputValueTxtCtrlLineRE.GetValue()
+    #     # Get Test Para
+    #     TestRGB_Index = self.ChoiceForTestLineRGB.GetCurrentSelection()
+    #     Testst = self.InputValueTxtTestLineSt.GetValue()
+    #     Testpn = self.InputValueTxtTestLinePN.GetValue()
+    #     TestRS = self.InputValueTxtTestLineRS.GetValue()
+    #     TestRE = self.InputValueTxtTestLineRE.GetValue()
+    #
+    #     if CtrlRGB_Index == 0:
+    #         Ctrlcolor = 'red'
+    #     elif CtrlRGB_Index == 1:
+    #         Ctrlcolor = 'green'
+    #     elif CtrlRGB_Index == 2:
+    #         Ctrlcolor = 'blue'
+    #
+    #     if TestRGB_Index == 0:
+    #         Testcolor = 'red'
+    #     elif TestRGB_Index == 1:
+    #         Testcolor = 'green'
+    #     elif TestRGB_Index == 2:
+    #         Testcolor = 'blue'
+    #     '''Call function'''
+    #     return CtrlRGB_Index, Ctrlst, Ctrlpn, CtrlRS, CtrlRE, Ctrlcolor, TestRGB_Index, Testst, Testpn, TestRS, TestRE, Testcolor
+    #
+    # def GetDiseaseParams(self):
+    #     Ctrlrgb_Index, Ctrlst, Ctrlpn, CtrlRS, CtrlRE, Ctrlcolor, Testrgb_Index, Testst, Testpn, TestRS, TestRE, Testcolor = self.GetCurrentPar()
+    #     #gamma = self.gamma
+    #     disease = self.ChoiceForDisease.GetValue()
+    #     params = DiseaseParams()
+    #     #Ctrl Para
+    #     params.CtrlRGB_Index = Ctrlrgb_Index
+    #     params.Ctrlst = Ctrlst
+    #     params.Ctrlpn = Ctrlpn
+    #     params.CtrlRS = CtrlRS
+    #     params.CtrlRE = CtrlRE
+    #     params.Ctrlcolor = Ctrlcolor
+    #     #Test Para
+    #     params.TestRGB_Index = Testrgb_Index
+    #     params.Testst = Testst
+    #     params.Testpn = Testpn
+    #     params.TestRS = TestRS
+    #     params.TestRE = TestRE
+    #     params.Testcolor = Testcolor
+    #
+    #     params.disease = disease
+    #     params.useFilter = self.useFilter
+    #     params.usePeakDetection = True
+    #     params.useEnhance = self.CheckBoxEnhance.GetValue()
+    #     return params
+    #
+    # def SetDiseaseParams(self, params):
+    #     pass

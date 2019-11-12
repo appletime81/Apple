@@ -5,8 +5,7 @@ import cv2
 from .base import BasePanel
 from PIL import Image
 from decimal import *
-from .VirusDetectAlgo import *
-from .NosieFilter import *
+from ..algorithm.VirusDetectAlgo import *
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_wxagg import FigureCanvasWxAgg as FigureCanvas
 from wx.lib.floatcanvas import FloatCanvas, FCObjects
@@ -19,6 +18,7 @@ class MultiResultPanel(BasePanel):
         super().__init__(*args, **kw)
         ##########Set the scroll panel######################
         self.panel = wx.lib.scrolledpanel.ScrolledPanel(parent=self, style = wx.ALL|wx.EXPAND)
+        self.panel.SetupScrolling
         self.panel.SetupScrolling()                        #
         # self.panel.SetScrollbars(wx.VERTICAL, 1, 1, 1200)
         # self.panel.SetScrollbars(wx.HORIZONTAL, 1, 1, 1200)
@@ -41,14 +41,14 @@ class MultiResultPanel(BasePanel):
         self.OriginalStatisticsPanel = wx.Panel(self.LoadOriginalImgPanel, id=wx.ID_ANY, size=(450, 200), pos=(0, 235), style=0)
         #self.OriginalStatisticsPanel.SetBackgroundColour((0, 0, 255))
 
-        self.LoadEnhanceImgPanel = wx.Panel(self.ScrollPanel, id=wx.ID_ANY, size=(500, 500), pos=(545, 547), style=0)
+        self.LoadEnhanceImgPanel = wx.Panel(self.ScrollPanel, id=wx.ID_ANY, size=(500, 500), pos=(545, 560), style=0)
         #self.LoadEnhanceImgPanel.SetBackgroundColour((0, 255, 0))
 
-        self.EnhancedStatisticsPanel = wx.Panel(self.LoadEnhanceImgPanel, id=wx.ID_ANY, size=(450, 200), pos=(0, 235), style=0)
+        self.EnhancedStatisticsPanel = wx.Panel(self.LoadEnhanceImgPanel, id=wx.ID_ANY, size=(450, 200), pos=(0, 200), style=0)
         #self.EnhancedStatisticsPanel.SetBackgroundColour((255, 0, 0))
 
         self.SlopeFigurePanel = wx.Panel(self.ScrollPanel, id=wx.ID_ANY, size=(2000, 1017), pos=(1045, 50), style=wx.TAB_TRAVERSAL)
-        #self.SlopeFigurePanel.SetBackgroundColour((0, 255, 0))
+        self.SlopeFigurePanel.SetBackgroundColour((0, 255, 0))
 
         self.SlopeStatisticsPanel = wx.Panel(self.SlopeFigurePanel, id=wx.ID_ANY, size=(1000, 216), pos=(0, 0), style=0)
         #self.SlopeStatisticsPanel.SetBackgroundColour((0, 0, 255))
@@ -93,9 +93,10 @@ class MultiResultPanel(BasePanel):
 
         #####Show the CheckBox for enhance################
         self.CheckBoxForEnhance()
-        self.CheckBoxForUseFilter()
+        #self.CheckBoxForUseFilter()
         self.CheckBoxFor4Blocks()
         self.CheckBoxForWhiteBalance()
+        self.CheckBoxAndComboBoxForSmoothFilter()
         self.ScrollMenu()
 
         #####Set default parameters#######################
@@ -131,8 +132,21 @@ class MultiResultPanel(BasePanel):
 
 
     def ShowStaticText(self):
-        self.ResultText = wx.StaticText(self.SlopeFigurePanel, label='Result : ', pos=(50, 480))
 
+        self.StatictxtResltTitleLeft_top = wx.StaticText(self.SlopeFigurePanel, label='Control Line', pos=(50, 228))
+        self.StatictxtResltTitleRight_top = wx.StaticText(self.SlopeFigurePanel, label='Test Line', pos=(180, 228))
+
+        self.StatictextCtrlLineResult_top = wx.StaticText(self.SlopeFigurePanel, label='Result : ', pos=(50, 246))
+        self.StatictextCtrlLineMax_top = wx.StaticText(self.SlopeFigurePanel, label='Max Value : ', pos=(50, 271))
+        self.StatictextCtrlLineMin_top = wx.StaticText(self.SlopeFigurePanel, label='Min Value : ', pos=(50, 296))
+        self.StatictextCtrlLinePeak_top = wx.StaticText(self.SlopeFigurePanel, label='MaxPeak : ', pos=(50, 321))
+
+        self.StatictextTestLineResult_top = wx.StaticText(self.SlopeFigurePanel, label='Result : ', pos=(180, 246))
+        self.StatictextTestLineMax_top = wx.StaticText(self.SlopeFigurePanel, label='Max Value : ', pos=(180, 271))
+        self.StatictextTestLineMin_top = wx.StaticText(self.SlopeFigurePanel, label='Min Value : ', pos=(180, 296))
+        self.StatictextTestLinePeak_top = wx.StaticText(self.SlopeFigurePanel, label='MaxPeak : ', pos=(180, 321))
+
+        self.ResultText = wx.StaticText(self.SlopeFigurePanel, label='Result : ', pos=(50, 480))
         self.statictext_virus_title = wx.StaticText(self.SlopeFigurePanel, label='Disease : ', pos=(50, 505))
 
         #########Control Line#####
@@ -159,8 +173,9 @@ class MultiResultPanel(BasePanel):
         self.StatictxtResltTitleRight = wx.StaticText(self.SlopeFigurePanel, label='Test Line Sec.3', pos=(440, 353))
         self.StatictxtResltTitleRight = wx.StaticText(self.SlopeFigurePanel, label='Test Line Sec.4', pos=(570, 353))
 
-        self.StatictxtResltTitleLeft_top = wx.StaticText(self.SlopeFigurePanel, label='Control Line', pos=(50, 248))
-        self.StatictxtResltTitleRight_top = wx.StaticText(self.SlopeFigurePanel, label='Test Line', pos=(180, 248))
+
+
+
 
 
         self.StdTxt = wx.StaticText(self.SlopeFigurePanel, label='Std. Value', pos=(507, 605))
@@ -183,18 +198,53 @@ class MultiResultPanel(BasePanel):
         #self.ShowCalculatedPN = wx.TextCtrl(self.SlopeFigurePanel, pos=(572, 538), size=(65, 23))
 
     def ShowResultTextCtrl(self):
-        str = 'Result : \nMax Value : \nMini Value : \nMaxPeak : '
 
-        self.TextCtrlLineResult_top = wx.TextCtrl(self.SlopeFigurePanel, style=wx.TE_MULTILINE | wx.TE_READONLY | wx.NO_BORDER | wx.TE_NO_VSCROLL, value=str, id=wx.ID_ANY, pos=(50, 266), size=(145, 70))
-        self.TextTestLineResult_top = wx.TextCtrl(self.SlopeFigurePanel, style=wx.TE_MULTILINE | wx.TE_READONLY | wx.NO_BORDER | wx.TE_NO_VSCROLL, value=str, id=wx.ID_ANY, pos=(180, 266), size=(145, 70))
+        self.CtrlLineResult_top = wx.TextCtrl(self.SlopeFigurePanel, pos=(118, 246), size=(61, 14))
+        self.CtrlLineMaxValue_top = wx.TextCtrl(self.SlopeFigurePanel, pos=(118, 271), size=(61, 14))
+        self.CtrlLineMinValue_top = wx.TextCtrl(self.SlopeFigurePanel, pos=(118, 296), size=(61, 14))
+        self.CtrlLineMaxPeak_top = wx.TextCtrl(self.SlopeFigurePanel, pos=(118, 321), size=(61, 14))
 
-        self.TextCtrlLineResult = wx.TextCtrl(self.SlopeFigurePanel, style=wx.TE_MULTILINE | wx.TE_READONLY | wx.NO_BORDER | wx.TE_NO_VSCROLL, value=str, id=wx.ID_ANY, pos=(50, 369), size=(145, 70))
-        #self.TextTestLineResult = wx.TextCtrl(self.SlopeFigurePanel, style=wx.TE_MULTILINE | wx.TE_READONLY | wx.NO_BORDER | wx.TE_NO_VSCROLL, value=str, id=wx.ID_ANY, pos=(180, 369), size=(145, 70))
+        self.TestLineResult_top = wx.TextCtrl(self.SlopeFigurePanel, pos=(248, 246), size=(61, 14))
+        self.TestLineMaxValueText_top = wx.TextCtrl(self.SlopeFigurePanel, pos=(248, 271), size=(61, 14))
+        self.TestLineMinValueText_top = wx.TextCtrl(self.SlopeFigurePanel, pos=(248, 296), size=(61, 14))
+        self.TestLineMaxPeakText_top = wx.TextCtrl(self.SlopeFigurePanel, pos=(248, 321), size=(61, 14))
+####################################################################################################################################
+        self.CtrlLineResult_bot = wx.TextCtrl(self.SlopeFigurePanel, pos=(118, 369), size=(61, 14))
+        self.CtrlLineMaxValue_bot = wx.TextCtrl(self.SlopeFigurePanel, pos=(118, 394), size=(61, 14))
+        self.CtrlLineMinValue_bot = wx.TextCtrl(self.SlopeFigurePanel, pos=(118, 419), size=(61, 14))
+        self.CtrlLineMaxPeak_bot = wx.TextCtrl(self.SlopeFigurePanel, pos=(118, 444), size=(61, 14))
 
-        self.TextTestLineResultSec1 = wx.TextCtrl(self.SlopeFigurePanel, style=wx.TE_MULTILINE | wx.TE_READONLY | wx.NO_BORDER | wx.TE_NO_VSCROLL, value=str, id=wx.ID_ANY, pos=(180, 369), size=(145, 70))
-        self.TextTestLineResultSec2 = wx.TextCtrl(self.SlopeFigurePanel, style=wx.TE_MULTILINE | wx.TE_READONLY | wx.NO_BORDER | wx.TE_NO_VSCROLL, value=str, id=wx.ID_ANY, pos=(310, 369), size=(145, 70))
-        self.TextTestLineResultSec3 = wx.TextCtrl(self.SlopeFigurePanel, style=wx.TE_MULTILINE | wx.TE_READONLY | wx.NO_BORDER | wx.TE_NO_VSCROLL, value=str, id=wx.ID_ANY, pos=(440, 369), size=(145, 70))
-        self.TextTestLineResultSec4 = wx.TextCtrl(self.SlopeFigurePanel, style=wx.TE_MULTILINE | wx.TE_READONLY | wx.NO_BORDER | wx.TE_NO_VSCROLL, value=str, id=wx.ID_ANY, pos=(570, 369), size=(145, 70))
+        # self.TestLineResult_bot1 = wx.TextCtrl(self.SlopeFigurePanel, pos=(248, 246), size=(61, 14))
+        # self.TestLineMaxValueText_bot1 = wx.TextCtrl(self.SlopeFigurePanel, pos=(248, 271), size=(61, 14))
+        # self.TestLineMinValueText_bot1 = wx.TextCtrl(self.SlopeFigurePanel, pos=(248, 296), size=(61, 14))
+        # self.TestLineMaxPeakText_bot1 = wx.TextCtrl(self.SlopeFigurePanel, pos=(248, 321), size=(61, 14))
+        #
+        # self.TestLineResult_bot2 = wx.TextCtrl(self.SlopeFigurePanel, pos=(248, 246), size=(61, 14))
+        # self.TestLineMaxValueText_bot2 = wx.TextCtrl(self.SlopeFigurePanel, pos=(248, 271), size=(61, 14))
+        # self.TestLineMinValueText_bot2 = wx.TextCtrl(self.SlopeFigurePanel, pos=(248, 296), size=(61, 14))
+        # self.TestLineMaxPeakText_bot2 = wx.TextCtrl(self.SlopeFigurePanel, pos=(248, 321), size=(61, 14))
+        #
+        # self.TestLineResult_bot3 = wx.TextCtrl(self.SlopeFigurePanel, pos=(248, 246), size=(61, 14))
+        # self.TestLineMaxValueText_bot3 = wx.TextCtrl(self.SlopeFigurePanel, pos=(248, 271), size=(61, 14))
+        # self.TestLineMinValueText_bot3 = wx.TextCtrl(self.SlopeFigurePanel, pos=(248, 296), size=(61, 14))
+        # self.TestLineMaxPeakText_bot3 = wx.TextCtrl(self.SlopeFigurePanel, pos=(248, 321), size=(61, 14))
+        #
+        # self.TestLineResult_bot3 = wx.TextCtrl(self.SlopeFigurePanel, pos=(248, 246), size=(61, 14))
+        # self.TestLineMaxValueText_bot3 = wx.TextCtrl(self.SlopeFigurePanel, pos=(248, 271), size=(61, 14))
+        # self.TestLineMinValueText_bot3 = wx.TextCtrl(self.SlopeFigurePanel, pos=(248, 296), size=(61, 14))
+        # self.TestLineMaxPeakText_bot3 = wx.TextCtrl(self.SlopeFigurePanel, pos=(248, 321), size=(61, 14))
+
+
+
+        #str = 'Result : \nMax Value : \nMini Value : \nMaxPeak : '
+
+        # self.TextCtrlLineResult_top = wx.TextCtrl(self.SlopeFigurePanel, style=wx.TE_MULTILINE | wx.TE_READONLY | wx.NO_BORDER | wx.TE_NO_VSCROLL, value=str, id=wx.ID_ANY, pos=(50, 266), size=(145, 70))
+        # self.TextTestLineResult_top = wx.TextCtrl(self.SlopeFigurePanel, style=wx.TE_MULTILINE | wx.TE_READONLY | wx.NO_BORDER | wx.TE_NO_VSCROLL, value=str, id=wx.ID_ANY, pos=(180, 266), size=(145, 70))
+
+        # self.TextTestLineResultSec1 = wx.TextCtrl(self.SlopeFigurePanel, style=wx.TE_MULTILINE | wx.TE_READONLY | wx.NO_BORDER | wx.TE_NO_VSCROLL, value=str, id=wx.ID_ANY, pos=(180, 369), size=(145, 70))
+        # self.TextTestLineResultSec2 = wx.TextCtrl(self.SlopeFigurePanel, style=wx.TE_MULTILINE | wx.TE_READONLY | wx.NO_BORDER | wx.TE_NO_VSCROLL, value=str, id=wx.ID_ANY, pos=(310, 369), size=(145, 70))
+        # self.TextTestLineResultSec3 = wx.TextCtrl(self.SlopeFigurePanel, style=wx.TE_MULTILINE | wx.TE_READONLY | wx.NO_BORDER | wx.TE_NO_VSCROLL, value=str, id=wx.ID_ANY, pos=(440, 369), size=(145, 70))
+        # self.TextTestLineResultSec4 = wx.TextCtrl(self.SlopeFigurePanel, style=wx.TE_MULTILINE | wx.TE_READONLY | wx.NO_BORDER | wx.TE_NO_VSCROLL, value=str, id=wx.ID_ANY, pos=(570, 369), size=(145, 70))
 
     def VirusColorOption(self):
         self.ChoiceForDisease = wx.ComboBox(self.SlopeFigurePanel, value='', pos=(114, 505), choices=['Flu A', 'Flu B', 'Myco', 'RSV', 'hMPV', 'StrepA'], size=(100, 20))
@@ -202,17 +252,24 @@ class MultiResultPanel(BasePanel):
         self.ChoiceForTestLineRGB = wx.ComboBox(self.SlopeFigurePanel, value='', pos=(320, 565), choices=['R', 'G', 'B'], size=(100, 20))
 
     def CheckBoxForEnhance(self):
-        self.CheckBoxEnhance = wx.CheckBox(self.SlopeFigurePanel, id=wx.ID_ANY, label='Enhance', pos=(50, 455))
+        self.CheckBoxEnhance = wx.CheckBox(self.ScrollPanel, id=wx.ID_ANY, label='Enhance', pos=(557, 545))
         self.CheckBoxEnhance.SetValue(True)
 
-    def CheckBoxForUseFilter(self):
-        self.CheckBoxUseFilter = wx.CheckBox(self.SlopeFigurePanel, id=wx.ID_ANY, label='Use Filter', pos=(150, 455))
-        self.CheckBoxUseFilter.Bind(wx.EVT_CHECKBOX, self.SetDefaultParameters)
-        self.CheckBoxUseFilter.SetValue(True)
-        if self.CheckBoxUseFilter.GetValue() == True:
-            self.useFilter = True
-        else:
-            self.useFilter = False
+    # def CheckBoxForUseFilter(self):
+    #     self.CheckBoxUseFilter = wx.CheckBox(self.SlopeFigurePanel, id=wx.ID_ANY, label='Use Filter', pos=(150, 455))
+    #     self.CheckBoxUseFilter.Bind(wx.EVT_CHECKBOX, self.SetDefaultParameters)
+    #     self.CheckBoxUseFilter.SetValue(True)
+    #     if self.CheckBoxUseSmoothFilter.GetValue() == True:
+    #         self.useFilter = True
+    #     else:
+    #         self.useFilter = False
+
+    def CheckBoxAndComboBoxForSmoothFilter(self):
+        self.CheckBoxUseSmoothFilter = wx.CheckBox(self.SlopeFigurePanel, id=wx.ID_ANY, label='Use SmoothFilter', pos=(51, 455))
+        self.CheckBoxUseSmoothFilter.SetValue(True)
+        self.ComboBoxSmoothFilter = wx.ComboBox(self.SlopeFigurePanel, id=wx.ID_ANY, value='3', choices=['3', '5', '7', '9', '11', '13', '15'], pos=(172, 452))
+
+
 
     def CheckBox4BlocksEvent(self, event):
         if self.CheckBoxBlocks.GetValue()==True:
@@ -233,7 +290,7 @@ class MultiResultPanel(BasePanel):
             self.TestLineNoEvent()
 
     def CheckBoxForWhiteBalance(self):
-        self.CheckBoxUseWhiteBalance = wx.CheckBox(self.SlopeFigurePanel, id=wx.ID_ANY, label='White Balance', pos=(245, 455))
+        self.CheckBoxUseWhiteBalance = wx.CheckBox(self.ScrollPanel, id=wx.ID_ANY, label='White Balance', pos=(638, 545))
         self.CheckBoxUseWhiteBalance.SetValue(True)
         #self.CheckBoxUseWhiteBalance.Bind(wx.EVT_CHECKBOX, self.SetDefaultParameters)
 
@@ -252,12 +309,12 @@ class MultiResultPanel(BasePanel):
         self.PnThresholdBut = wx.Button(self.SlopeFigurePanel, label='Cal.', pos=(475, 622), size=(30,25))
 
     def CheckBoxFor4Blocks(self):
-        self.CheckBoxBlocks = wx.CheckBox(self.SlopeFigurePanel, id=wx.ID_ANY, label='4 Blocks Detection', pos=(375, 455))
+        self.CheckBoxBlocks = wx.CheckBox(self.SlopeFigurePanel, id=wx.ID_ANY, label='4 Blocks Detection', pos=(232, 455))
         self.CheckBoxBlocks.SetValue(False)
 
     def ScrollMenu(self):
         #4Blocks選單
-        self.BlockNum = wx.ComboBox(self.SlopeFigurePanel, value='4', choices=['4', '3', '2', '1'], pos=(500, 452))
+        self.BlockNum = wx.ComboBox(self.SlopeFigurePanel, value='4', choices=['4', '3', '2', '1'], pos=(362, 452))
         #標準差選單
         self.StdValue = wx.ComboBox(self.SlopeFigurePanel, value='4', choices=['5', '4', '3', '2', '1'], pos=(510, 623), size=(51, 22))
 
@@ -306,9 +363,9 @@ class MultiResultPanel(BasePanel):
 
         if self.CheckBoxBlocks.GetValue()==True:
             #self.pn1, self.pn2 = calculateCutOffValue4Block(ImgPathList, line_parameters, std_rate=int(self.StdValue.GetValue()))
-            self.pn1, self.pn2 = calculateCutOffValue4Block(ImgPathList, line_parameters, self.CheckBoxEnhance.GetValue(), self.CheckBoxUseWhiteBalance.GetValue(), std_rate=int(self.StdValue.GetValue())) #Check
+            self.pn1, self.pn2 = calculateCutOffValue4Block(ImgPathList, line_parameters, self.CheckBoxEnhance.GetValue(), self.CheckBoxUseWhiteBalance.GetValue(), self.CheckBoxUseSmoothFilter.GetValue(), int(self.ComboBoxSmoothFilter.GetValue()), std_rate=int(self.StdValue.GetValue())) #Check2
         else:
-            self.pn1, self.pn2 = calculateCutOffValue(ImgPathList, line_parameters, self.CheckBoxEnhance.GetValue(), self.CheckBoxUseWhiteBalance.GetValue(), std_rate=int(self.StdValue.GetValue())) #Check
+            self.pn1, self.pn2 = calculateCutOffValue(ImgPathList, line_parameters, self.CheckBoxEnhance.GetValue(), self.CheckBoxUseWhiteBalance.GetValue(), self.CheckBoxUseSmoothFilter.GetValue(), int(self.ComboBoxSmoothFilter.GetValue()), std_rate=int(self.StdValue.GetValue())) #Check2
 
         #self.ShowCalculatedPN.SetValue(str(np.round(self.pn1, decimals=3)))
         self.InputValueTxtTestLinePN.SetValue(str(np.round(self.pn1, decimals=3)))
@@ -360,9 +417,9 @@ class MultiResultPanel(BasePanel):
                     line_parameters = [Ctrl_para, Test_para]
 
                     if self.CheckBoxBlocks.GetValue() == True:
-                        self.pn1, self.pn2 = calculateCutOffValue4Block(ImgPathList, line_parameters, self.CheckBoxEnhance.GetValue(), self.CheckBoxUseWhiteBalance.GetValue(), std_rate=int(self.StdValue.GetValue())) #Check
+                        self.pn1, self.pn2 = calculateCutOffValue4Block(ImgPathList, line_parameters, self.CheckBoxEnhance.GetValue(), self.CheckBoxUseWhiteBalance.GetValue(), self.CheckBoxUseSmoothFilter.GetValue(), int(self.ComboBoxSmoothFilter.GetValue()), std_rate=int(self.StdValue.GetValue())) #Check2
                     else:
-                        self.pn1, self.pn2 = calculateCutOffValue(ImgPathList, line_parameters, self.CheckBoxEnhance.GetValue(), self.CheckBoxUseWhiteBalance.GetValue(), std_rate=int(self.StdValue.GetValue()))#Check
+                        self.pn1, self.pn2 = calculateCutOffValue(ImgPathList, line_parameters, self.CheckBoxEnhance.GetValue(), self.CheckBoxUseWhiteBalance.GetValue(), self.CheckBoxUseSmoothFilter.GetValue(), int(self.ComboBoxSmoothFilter.GetValue()), std_rate=int(self.StdValue.GetValue()))#Check2
 
                     # self.ShowCalculatedPN.SetValue(str(np.round(self.pn1, decimals=3)))
                     self.InputValueTxtTestLinePN.SetValue(str(np.round(self.pn1, decimals=3)))
@@ -457,8 +514,8 @@ class MultiResultPanel(BasePanel):
 
         elif disease == 'RSV':
             path = os.listdir('./samples/RSV-hMPV')
-            path = list(map(int, path))
-            path.sort()
+            path = list(map(str, path))
+            #path.sort()
             for i in range(len(path)):
                 paths.append('./samples/RSV-hMPV' + '/' + str(path[i]))
             for i in range(len(paths)):
@@ -594,7 +651,7 @@ class MultiResultPanel(BasePanel):
                     im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
 
                     if self.CheckBoxBlocks.GetValue() == True:
-                        self.control, self.test_result1, self.test_result2, self.test_result1_pred, self.test_result2_pred = algorithm3_with_slope_4block(im, line_parameters, self.CheckBoxEnhance.GetValue(), self.CheckBoxUseWhiteBalance.GetValue(), self.CheckBoxUseFilter.GetValue(), self.usePeakDetection, False, num_positive=int(self.BlockNum.GetValue())) #Check
+                        self.control, self.test_result1, self.test_result2, self.test_result1_pred, self.test_result2_pred = algorithm3_with_slope_4block(im, line_parameters, self.CheckBoxEnhance.GetValue(), self.CheckBoxUseWhiteBalance.GetValue(), self.CheckBoxUseSmoothFilter.GetValue(), int(self.ComboBoxSmoothFilter.GetValue()), self.usePeakDetection, False, num_positive=int(self.BlockNum.GetValue())) #Check
 
                         if self.control[0]==1:
                             self.MaxPeak = (self.test_result1[0][1] + self.test_result1[1][1] + self.test_result1[2][1] + self.test_result1[3][1]) / 4
@@ -609,7 +666,7 @@ class MultiResultPanel(BasePanel):
                             self.MaxPeakSec3 = 0
                             self.MaxPeakSec4 = 0
                     else:
-                        self.control, self.test_result1, self.test_result2 = algorithm3_with_slope(im, line_parameters, self.CheckBoxEnhance.GetValue(), self.CheckBoxUseWhiteBalance.GetValue(), self.CheckBoxUseFilter.GetValue(), self.usePeakDetection, False) #Check
+                        self.control, self.test_result1, self.test_result2 = algorithm3_with_slope(im, line_parameters, self.CheckBoxEnhance.GetValue(), self.CheckBoxUseWhiteBalance.GetValue(), self.CheckBoxUseSmoothFilter.GetValue(), int(self.ComboBoxSmoothFilter.GetValue()), self.usePeakDetection, False) #Check
                         if self.control[0]==1:
                             self.MaxPeak = self.test_result1[1]
                         else:
@@ -754,12 +811,12 @@ class MultiResultPanel(BasePanel):
         return df
 
     def SetDefaultParameters(self, event):
-        if self.CheckBoxUseFilter.GetValue()==True:
-            self.useFilter = True
+        if self.CheckBoxUseSmoothFilter.GetValue()==True:
+            #self.useFilter = True
             para=[get_line_para_map('FluA'), get_line_para_map('FluB'), get_line_para_map('Myco'), get_line_para_map('RSV-hMPV'), get_line_para_map('StrepA')]
         else:
-            self.useFilter = False
-            para=[get_line_para_map_no_filter('FluA'), get_line_para_map_no_filter('FluB'), get_line_para_map_no_filter('Myco'), get_line_para_map_no_filter('RSV-hMPV'), get_line_para_map_no_filter('StrepA')]
+            #self.useFilter = False
+            para=[get_line_para_map('FluA'), get_line_para_map('FluB'), get_line_para_map('Myco'), get_line_para_map('RSV-hMPV'), get_line_para_map('StrepA')]
         if self.ChoiceForDisease.GetValue() == 'Flu A':
             self.ChoiceForTestLineRGB.SetSelection(para[0][1][0])
             self.InputValueTxtGamma.SetValue('2')
@@ -881,8 +938,17 @@ class MultiResultPanel(BasePanel):
         self.ResizeImg(W, H)
 
         img = cv2.resize(img, (int(self.NewW), int(self.NewH)))
+        if self.CheckBoxEnhance.GetValue()==True and self.CheckBoxUseWhiteBalance.GetValue()==False:
+            img_enhance = gamma_enhance(img)
+        elif self.CheckBoxEnhance.GetValue()==True and self.CheckBoxUseWhiteBalance.GetValue()==True:
+            img_enhance = gamma_enhance(img)
+            img_enhance = white_balance(img_enhance)
+        elif self.CheckBoxEnhance.GetValue() == False and self.CheckBoxUseWhiteBalance.GetValue() == True:
+            img_enhance = white_balance(img)
+        else:
+            img_enhance = im
 
-        img_enhance = gamma_enhance(img)
+
 
         wxbmp = wx.Bitmap.FromBuffer(img.shape[1], img.shape[0], img)
         wxbmp_enhance = wx.Bitmap.FromBuffer(img_enhance.shape[1], img_enhance.shape[0], img_enhance)
@@ -988,7 +1054,7 @@ class MultiResultPanel(BasePanel):
         #     self.TestLineMultiDFArr = self.img
 
         if self.CheckBoxEnhance.GetValue()==True and self.CheckBoxBlocks.GetValue() == False:
-            self.CtrlResult, self.result1, self.result2 = algorithm3_with_slope(self.img, self.line_para, True, self.CheckBoxUseWhiteBalance.GetValue(),self.CheckBoxUseFilter.GetValue(), True, False) #Check
+            self.CtrlResult, self.result1, self.result2 = algorithm3_with_slope(self.img, self.line_para, True, self.CheckBoxUseWhiteBalance.GetValue(),self.CheckBoxUseSmoothFilter.GetValue(), int(self.ComboBoxSmoothFilter.GetValue()), True, False) #Check
             if self.CtrlResult[0] == 1:
                 self.TestDFArr = self.result1[6]
                 self.TestMaxIndex = self.result1[2]
@@ -1004,7 +1070,7 @@ class MultiResultPanel(BasePanel):
                 self.TestMinValue = self.CtrlResult[5]
 
         elif self.CheckBoxEnhance.GetValue()==True and self.CheckBoxBlocks.GetValue() == True:
-            self.CtrlResult, self.result1, self.result2, self.test_result1_pred, self.test_result2_pred = algorithm3_with_slope_4block(self.img, self.line_para, True, self.CheckBoxUseWhiteBalance.GetValue(), self.CheckBoxUseFilter.GetValue(), True, False, num_positive=int(self.BlockNum.GetValue())) #Check
+            self.CtrlResult, self.result1, self.result2, self.test_result1_pred, self.test_result2_pred = algorithm3_with_slope_4block(self.img, self.line_para, True, self.CheckBoxUseWhiteBalance.GetValue(), self.CheckBoxUseSmoothFilter.GetValue(), int(self.ComboBoxSmoothFilter.GetValue()), True, False, num_positive=int(self.BlockNum.GetValue())) #Check
             if self.CtrlResult[0] == 1:
                 pass
             else:
@@ -1016,7 +1082,7 @@ class MultiResultPanel(BasePanel):
             self.SetBoundaryLineForBlocks(self.OriginalImg, self.EnhanceImg, int(self.InputValueTxtTestLineRS.GetValue()), int(self.InputValueTxtTestLineRE.GetValue()))
 
         elif self.CheckBoxEnhance.GetValue() == False and self.CheckBoxBlocks.GetValue() == False:
-            self.CtrlResult, self.result1, self.result2 = algorithm3_with_slope(self.img, self.line_para, False, self.CheckBoxUseWhiteBalance.GetValue(), self.CheckBoxUseFilter.GetValue(), True, False) #Check
+            self.CtrlResult, self.result1, self.result2 = algorithm3_with_slope(self.img, self.line_para, False, self.CheckBoxUseWhiteBalance.GetValue(), self.CheckBoxUseSmoothFilter.GetValue(), int(self.ComboBoxSmoothFilter.GetValue()), True, False) #Check
             if self.CtrlResult[0] == 1:
                 self.TestDFArr = self.result1[6]
                 self.TestMaxIndex = self.result1[2]
@@ -1032,7 +1098,7 @@ class MultiResultPanel(BasePanel):
                 self.TestMinValue = self.CtrlResult[5]
 
         else:# self.CheckBoxEnhance.GetValue() == False and self.CheckBoxBlocks.GetValue() == True:
-            self.CtrlResult, self.result1, self.result2, self.test_result1_pred, self.test_result2_pred = algorithm3_with_slope_4block(self.img, self.line_para, False, self.CheckBoxUseWhiteBalance.GetValue(), self.CheckBoxUseFilter.GetValue(), True, False, num_positive=int(self.BlockNum.GetValue())) #Check
+            self.CtrlResult, self.result1, self.result2, self.test_result1_pred, self.test_result2_pred = algorithm3_with_slope_4block(self.img, self.line_para, False, self.CheckBoxUseWhiteBalance.GetValue(), self.CheckBoxUseSmoothFilter.GetValue(), int(self.ComboBoxSmoothFilter.GetValue()), True, False, num_positive=int(self.BlockNum.GetValue())) #Check
             if self.CtrlResult[0] == 1:
                 pass
             else:
@@ -1398,6 +1464,15 @@ class MultiResultPanel(BasePanel):
 
     def ShowPlot(self, im):
         image = np.array(im)
+        if self.CheckBoxEnhance.GetValue()==True and self.CheckBoxUseWhiteBalance.GetValue()==False:
+            image = gamma_enhance(image)
+        elif self.CheckBoxEnhance.GetValue()==True and self.CheckBoxUseWhiteBalance.GetValue()==True:
+            image = gamma_enhance(image)
+            image = white_balance(image)
+        elif self.CheckBoxEnhance.GetValue() == False and self.CheckBoxUseWhiteBalance.GetValue() == True:
+            image = white_balance(image)
+        else:
+            image = image
         r, g, b = image[:, :, 0], image[:, :, 1], image[:, :, 2]
         r = np.average(np.transpose(r), axis=1)
         g = np.average(np.transpose(g), axis=1)

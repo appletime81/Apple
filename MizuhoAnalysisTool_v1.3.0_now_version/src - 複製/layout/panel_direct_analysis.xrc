@@ -1,0 +1,233 @@
+<?xml version="1.0" ?>
+<resource xmlns="http://www.wxwidgets.org/wxxrc">
+    <object class="wxPanel" name="root">
+        <object class="wxBoxSizer">
+            <orient>wxVERTICAL</orient>
+
+            <object class="sizeritem">
+                <flag>wxEXPAND</flag>
+                <option>1</option>
+
+                <object class="wxPanel"  name="msg_panel">
+                    <hidden>1</hidden>
+                </object>
+            </object>
+
+            <object class="sizeritem">
+                <flag>wxEXPAND</flag>
+                <option>1</option>
+
+                <object class="wxScrolledWindow" name="main_window">
+                    <scrollrate>5, 5</scrollrate>
+
+                    <object class="wxGridBagSizer">
+                        <vgap>1</vgap>
+                        <hgap>1</hgap>
+                        <growablerows>1:1, 2:3</growablerows>
+                        <growablecols>0</growablecols>
+
+                        <!-- Menu Buttons -->
+                        <object class="sizeritem">
+                            <cellpos>0, 0</cellpos>
+                            <cellspan>1, 4</cellspan>
+                            <flag>wxALL|wxEXPAND</flag>
+                            <border>5</border>
+
+                            <object class="wxBoxSizer" name="sizer_menu">
+                                <orient>wxHORIZONTAL</orient>
+
+                                <object class="sizeritem">
+                                    <object class="wxButton" name="button_browse">
+                                        <label>Open Image File</label>
+                                    </object>
+                                </object>
+
+                                <object class="sizeritem">
+                                    <object class="wxButton" name="button_export_csv">
+                                        <enabled>0</enabled>
+                                        <label>EXPORT CSV</label>
+                                    </object>
+                                </object>
+                            </object>
+                        </object>
+
+                        <!-- Sample Image -->
+                        <object class="sizeritem">
+                            <cellpos>1, 0</cellpos>
+                            <cellspan>1, 1</cellspan>
+                            <flag>wxEXPAND|wxALIGN_CENTRE</flag>
+                            <minsize>320, 182</minsize>
+
+                            <object class="wxPanel" name="panel_sample" />
+                        </object>
+
+                        <!-- Analysis Config -->
+                        <object class="sizeritem">
+                            <flag>wxALIGN_CENTRE</flag>
+                            <cellpos>1, 1</cellpos>
+                            <cellspan>1, 1</cellspan>
+
+                            <object class="wxBoxSizer">
+                                <orient>wxVERTICAL</orient>
+
+                                <!-- Switch of Enhanced Image -->
+                                <object class="sizeritem">
+                                    <flag>wxALIGN_CENTRE|wxALL</flag>
+                                    <border>5</border>
+
+                                    <object class="wxCheckBox" name="enhanced_img_checkbox">
+                                        <label>Enhabced image</label>
+                                        <checked>0</checked>
+                                    </object>
+                                </object>
+
+                                <!-- Specified Area -->
+                                <object class="sizeritem">
+                                    <object class="wxStaticText">
+                                        <label>Specified area</label>
+                                    </object>
+                                </object>
+
+                                <object class="sizeritem">
+                                    <object class="wxGrid" name="grid_specified_area" />
+                                </object>
+                                <!-- Analysis Center -->
+                                <object class="sizeritem">
+                                    <object class="wxStaticText">
+                                        <label>The coordinates to analyze</label>
+                                    </object>
+                                </object>
+
+                                <object class="sizeritem">
+                                    <object class="wxGrid" name="grid_analysis_center" />
+                                </object>
+                                <!-- Log Width -->
+                                <object class="sizeritem">
+                                    <object class="wxStaticText">
+                                        <label>Log width (pixels)</label>
+                                    </object>
+                                </object>
+
+                                <object class="sizeritem">
+                                    <object class="wxGrid" name="grid_log_width" />
+                                </object>
+                            </object>
+                        </object>
+
+                        <object class="sizeritem">
+                            <cellpos>1, 2</cellpos>
+                            <cellspan>2, 1</cellspan>
+                            <flag>wxALL|wxEXPAND</flag>
+
+                            <object class="wxBoxSizer">
+                                <orient>wxVERTICAL</orient>
+
+                                <!-- Log Details - X -->
+                                <object class="sizeritem">
+                                    <option>1</option>
+
+                                    <object class="wxListCtrl" name="listctrl_x">
+                                        <style>wxLC_REPORT</style>
+
+                                        <object class="listcol">
+                                            <text>Xn</text>
+                                            <width>50</width>
+                                        </object>
+                                        <object class="listcol">
+                                            <text>R</text>
+                                            <width>50</width>
+                                        </object>
+                                        <object class="listcol">
+                                            <text>G</text>
+                                            <width>50</width>
+                                        </object>
+                                        <object class="listcol">
+                                            <text>B</text>
+                                            <width>50</width>
+                                        </object>
+                                    </object>
+                                </object>
+
+                                <!-- Graph - Axis RadioBox -->
+                                <object class="sizeritem">
+                                    <flag>wxALL|wxEXPAND</flag>
+
+                                    <object class="wxRadioBox" name="radiobox_graph_axis">
+                                        <dimension>1</dimension>
+                                        <selection>0</selection>
+                                        <style>wxRA_SPECIFY_COLS</style>
+
+                                        <content>
+                                            <item>X</item>
+                                            <item>Y</item>
+                                        </content>
+                                    </object>
+                                </object>
+                            </object>
+                        </object>
+
+                        <object class="sizeritem">
+                            <cellpos>1, 3</cellpos>
+                            <cellspan>2, 1</cellspan>
+                            <flag>wxALL|wxEXPAND</flag>
+
+                            <object class="wxBoxSizer">
+                                <orient>wxVERTICAL</orient>
+
+                                <!-- Log Details - Y -->
+                                <object class="sizeritem">
+                                    <option>1</option>
+
+                                    <object class="wxListCtrl" name="listctrl_y">
+                                        <style>wxLC_REPORT</style>
+
+                                        <object class="listcol">
+                                            <text>Yn</text>
+                                            <width>50</width>
+                                        </object>
+                                        <object class="listcol">
+                                            <text>R</text>
+                                            <width>50</width>
+                                        </object>
+                                        <object class="listcol">
+                                            <text>G</text>
+                                            <width>50</width>
+                                        </object>
+                                        <object class="listcol">
+                                            <text>B</text>
+                                            <width>50</width>
+                                        </object>
+                                    </object>
+                                </object>
+                                
+                                <!-- Graph - Color CheckListBox -->
+                                <object class="sizeritem">
+                                    <flag>wxALL|wxEXPAND</flag>
+
+                                    <object class="wxCheckListBox" name="checklistbox_graph_color">
+                                        <content>
+                                            <item checked="1">R</item>
+                                            <item checked="1">G</item>
+                                            <item checked="1">B</item>
+                                        </content>
+                                    </object>
+                                </object>
+                            </object>
+                        </object>
+
+                        <!-- Graph - Chart -->
+                        <object class="sizeritem">
+                            <cellpos>2, 0</cellpos>
+                            <cellspan>1, 2</cellspan>
+                            <flag>wxEXPAND|wxALIGN_CENTRE</flag>
+                            <!-- TODO: cause irregular mouse action. Commenting this can get improvement.  -->
+                            <!-- <minsize>640, 240</minsize> -->
+
+                            <object class="wxPanel" name="panel_chart" />
+                        </object>
+                    </object>
+                </object>
+            </object>
+        </object>
+    </object>
+</resource>
