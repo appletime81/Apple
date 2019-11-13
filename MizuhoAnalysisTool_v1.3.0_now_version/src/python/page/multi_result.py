@@ -48,7 +48,7 @@ class MultiResultPanel(BasePanel):
         #self.EnhancedStatisticsPanel.SetBackgroundColour((255, 0, 0))
 
         self.SlopeFigurePanel = wx.Panel(self.ScrollPanel, id=wx.ID_ANY, size=(2000, 1017), pos=(1045, 50), style=wx.TAB_TRAVERSAL)
-        self.SlopeFigurePanel.SetBackgroundColour((0, 255, 0))
+        #self.SlopeFigurePanel.SetBackgroundColour((0, 255, 0))
 
         self.SlopeStatisticsPanel = wx.Panel(self.SlopeFigurePanel, id=wx.ID_ANY, size=(1000, 216), pos=(0, 0), style=0)
         #self.SlopeStatisticsPanel.SetBackgroundColour((0, 0, 255))
@@ -137,33 +137,33 @@ class MultiResultPanel(BasePanel):
         self.StatictxtResltTitleRight_top = wx.StaticText(self.SlopeFigurePanel, label='Test Line', pos=(180, 228))
 
         self.StatictextCtrlLineResult_top = wx.StaticText(self.SlopeFigurePanel, label='Result : ', pos=(50, 246))
-        self.StatictextCtrlLineMax_top = wx.StaticText(self.SlopeFigurePanel, label='Max Value : ', pos=(50, 271))
+        self.StatictextCtrlLineMax_top = wx.StaticText(self.SlopeFigurePanel, label='Max Value :', pos=(50, 271))
         self.StatictextCtrlLineMin_top = wx.StaticText(self.SlopeFigurePanel, label='Min Value : ', pos=(50, 296))
         self.StatictextCtrlLinePeak_top = wx.StaticText(self.SlopeFigurePanel, label='MaxPeak : ', pos=(50, 321))
 
         self.StatictextTestLineResult_top = wx.StaticText(self.SlopeFigurePanel, label='Result : ', pos=(180, 246))
-        self.StatictextTestLineMax_top = wx.StaticText(self.SlopeFigurePanel, label='Max Value : ', pos=(180, 271))
+        self.StatictextTestLineMax_top = wx.StaticText(self.SlopeFigurePanel, label='Max Value :', pos=(180, 271))
         self.StatictextTestLineMin_top = wx.StaticText(self.SlopeFigurePanel, label='Min Value : ', pos=(180, 296))
         self.StatictextTestLinePeak_top = wx.StaticText(self.SlopeFigurePanel, label='MaxPeak : ', pos=(180, 321))
 
-        self.ResultText = wx.StaticText(self.SlopeFigurePanel, label='Result : ', pos=(50, 480))
-        self.statictext_virus_title = wx.StaticText(self.SlopeFigurePanel, label='Disease : ', pos=(50, 505))
+        self.ResultText = wx.StaticText(self.SlopeFigurePanel, label='Result : ', pos=(50, 500))
+        self.statictext_virus_title = wx.StaticText(self.SlopeFigurePanel, label='Disease : ', pos=(50, 525))
 
         #########Control Line#####
-        self.StatictextCtrlLineTitle = wx.StaticText(self.SlopeFigurePanel, label='Control Line', pos=(50, 535))
-        self.StatictextCtrlLineColor = wx.StaticText(self.SlopeFigurePanel, label='RGB Color ', pos=(50, 565))
-        self.StatictextCtrlLineSt = wx.StaticText(self.SlopeFigurePanel, label='Strides Threshold : ', pos=(50, 595))
-        self.StatictextCtrlLinePN = wx.StaticText(self.SlopeFigurePanel, label='PN Threshold : ', pos=(50, 625))
-        self.StatictextCtrlLineRS = wx.StaticText(self.SlopeFigurePanel, label='Range of Start : ', pos=(50, 655))
-        self.StatictextCtrlLineRE = wx.StaticText(self.SlopeFigurePanel, label='Range of End : ', pos=(50, 685))
+        self.StatictextCtrlLineTitle = wx.StaticText(self.SlopeFigurePanel, label='Control Line', pos=(50, 555))
+        self.StatictextCtrlLineColor = wx.StaticText(self.SlopeFigurePanel, label='RGB Color ', pos=(50, 585))
+        self.StatictextCtrlLineSt = wx.StaticText(self.SlopeFigurePanel, label='Strides Threshold : ', pos=(50, 615))
+        self.StatictextCtrlLinePN = wx.StaticText(self.SlopeFigurePanel, label='PN Threshold : ', pos=(50, 645))
+        self.StatictextCtrlLineRS = wx.StaticText(self.SlopeFigurePanel, label='Range of Start : ', pos=(50, 675))
+        self.StatictextCtrlLineRE = wx.StaticText(self.SlopeFigurePanel, label='Range of End : ', pos=(50, 705))
 
         #########Test Line########
-        self.StatictextTestLineTitle = wx.StaticText(self.SlopeFigurePanel, label='Test Line', pos=(320, 535))
+        self.StatictextTestLineTitle = wx.StaticText(self.SlopeFigurePanel, label='Test Line', pos=(320, 555))
         self.StatictextTestLineColor = wx.StaticText(self.SlopeFigurePanel, label='RGB Color ', pos=(320, 10000))
-        self.StatictextTestLineSt = wx.StaticText(self.SlopeFigurePanel, label='Strides Threshold : ', pos=(320, 595))
-        self.StatictextTestLinePN = wx.StaticText(self.SlopeFigurePanel, label='PN Threshold : ', pos=(320, 625))
-        self.StatictextTestLineRS = wx.StaticText(self.SlopeFigurePanel, label='Range of Start : ', pos=(320, 655))
-        self.StatictextTestLineRE = wx.StaticText(self.SlopeFigurePanel, label='Range of End : ', pos=(320, 685))
+        self.StatictextTestLineSt = wx.StaticText(self.SlopeFigurePanel, label='Strides Threshold : ', pos=(320, 615))
+        self.StatictextTestLinePN = wx.StaticText(self.SlopeFigurePanel, label='PN Threshold : ', pos=(320, 645))
+        self.StatictextTestLineRS = wx.StaticText(self.SlopeFigurePanel, label='Range of Start : ', pos=(320, 675))
+        self.StatictextTestLineRE = wx.StaticText(self.SlopeFigurePanel, label='Range of End : ', pos=(320, 705))
 
         #########Result Title#####
         self.StatictxtResltTitleLeft = wx.StaticText(self.SlopeFigurePanel, label='Control Line', pos=(50, 353))
@@ -173,83 +173,100 @@ class MultiResultPanel(BasePanel):
         self.StatictxtResltTitleRight = wx.StaticText(self.SlopeFigurePanel, label='Test Line Sec.3', pos=(440, 353))
         self.StatictxtResltTitleRight = wx.StaticText(self.SlopeFigurePanel, label='Test Line Sec.4', pos=(570, 353))
 
+        self.StatictextCtrlLineResult_bot = wx.StaticText(self.SlopeFigurePanel, label='Result : ', pos=(50, 369))
+        self.StatictextCtrlLineMax_bot = wx.StaticText(self.SlopeFigurePanel, label='Max Value :', pos=(50, 394))
+        self.StatictextCtrlLineMin_bot = wx.StaticText(self.SlopeFigurePanel, label='Min Value : ', pos=(50, 419))
+        self.StatictextCtrlLinePeak_bot = wx.StaticText(self.SlopeFigurePanel, label='MaxPeak : ', pos=(50, 444))
 
+        self.StatictextTestLineResult_bot1 = wx.StaticText(self.SlopeFigurePanel, label='Result : ', pos=(180, 369))
+        self.StatictextTestLineMax_bot1 = wx.StaticText(self.SlopeFigurePanel, label='Max Value :', pos=(180, 394))
+        self.StatictextTestLineMin_bot1 = wx.StaticText(self.SlopeFigurePanel, label='Min Value : ', pos=(180, 419))
+        self.StatictextTestLinePeak_bot1 = wx.StaticText(self.SlopeFigurePanel, label='MaxPeak : ', pos=(180, 444))
 
+        self.StatictextTestLineResult_bot2 = wx.StaticText(self.SlopeFigurePanel, label='Result : ', pos=(310, 369))
+        self.StatictextTestLineMax_bot2 = wx.StaticText(self.SlopeFigurePanel, label='Max Value :', pos=(310, 394))
+        self.StatictextTestLineMin_bot2 = wx.StaticText(self.SlopeFigurePanel, label='Min Value : ', pos=(310, 419))
+        self.StatictextTestLinePeak_bot2 = wx.StaticText(self.SlopeFigurePanel, label='MaxPeak : ', pos=(310, 444))
 
+        self.StatictextTestLineResult_bot3 = wx.StaticText(self.SlopeFigurePanel, label='Result : ', pos=(440, 369))
+        self.StatictextTestLineMax_bot3 = wx.StaticText(self.SlopeFigurePanel, label='Max Value :', pos=(440, 394))
+        self.StatictextTestLineMin_bot3 = wx.StaticText(self.SlopeFigurePanel, label='Min Value : ', pos=(440, 419))
+        self.StatictextTestLinePeak_bot3 = wx.StaticText(self.SlopeFigurePanel, label='MaxPeak : ', pos=(440, 444))
 
+        self.StatictextTestLineResult_bot4 = wx.StaticText(self.SlopeFigurePanel, label='Result : ', pos=(570, 369))
+        self.StatictextTestLineMax_bot4 = wx.StaticText(self.SlopeFigurePanel, label='Max Value :', pos=(570, 394))
+        self.StatictextTestLineMin_bot4 = wx.StaticText(self.SlopeFigurePanel, label='Min Value : ', pos=(570, 419))
+        self.StatictextTestLinePeak_bot4 = wx.StaticText(self.SlopeFigurePanel, label='MaxPeak : ', pos=(570, 444))
 
-        self.StdTxt = wx.StaticText(self.SlopeFigurePanel, label='Std. Value', pos=(507, 605))
+        self.StdTxt = wx.StaticText(self.SlopeFigurePanel, label='Std. Value', pos=(507, 615))
 
     def ShowTextCtrl(self):
         self.InputValueTxtGamma = wx.TextCtrl(parent=self.SlopeFigurePanel, pos=(71, 10000), size=(33, 23))
         #########Control Line#####
-        self.InputValueTxtCtrlLineSt = wx.TextCtrl(self.SlopeFigurePanel, pos=(157, 595), size=(33, 23))
-        self.InputValueTxtCtrlLinePN = wx.TextCtrl(self.SlopeFigurePanel, pos=(157, 625), size=(33, 25))
-        self.InputValueTxtCtrlLineRS = wx.TextCtrl(self.SlopeFigurePanel, pos=(157, 655), size=(33, 23))
-        self.InputValueTxtCtrlLineRE = wx.TextCtrl(self.SlopeFigurePanel, pos=(157, 685), size=(33, 23))
+        self.InputValueTxtCtrlLineSt = wx.TextCtrl(self.SlopeFigurePanel, pos=(157, 615), size=(33, 23))
+        self.InputValueTxtCtrlLinePN = wx.TextCtrl(self.SlopeFigurePanel, pos=(157, 645), size=(33, 25))
+        self.InputValueTxtCtrlLineRS = wx.TextCtrl(self.SlopeFigurePanel, pos=(157, 675), size=(33, 23))
+        self.InputValueTxtCtrlLineRE = wx.TextCtrl(self.SlopeFigurePanel, pos=(157, 705), size=(33, 23))
 
         #########Test Line########
-        self.InputValueTxtTestLineSt = wx.TextCtrl(self.SlopeFigurePanel, pos=(427, 595), size=(33, 23))
-        self.InputValueTxtTestLinePN = wx.TextCtrl(self.SlopeFigurePanel, pos=(427, 625), size=(33, 25))
-        self.InputValueTxtTestLineRS = wx.TextCtrl(self.SlopeFigurePanel, pos=(427, 655), size=(33, 23))
-        self.InputValueTxtTestLineRE = wx.TextCtrl(self.SlopeFigurePanel, pos=(427, 685), size=(33, 23))
+        self.InputValueTxtTestLineSt = wx.TextCtrl(self.SlopeFigurePanel, pos=(427, 615), size=(33, 23))
+        self.InputValueTxtTestLinePN = wx.TextCtrl(self.SlopeFigurePanel, pos=(427, 645), size=(33, 25))
+        self.InputValueTxtTestLineRS = wx.TextCtrl(self.SlopeFigurePanel, pos=(427, 675), size=(33, 23))
+        self.InputValueTxtTestLineRE = wx.TextCtrl(self.SlopeFigurePanel, pos=(427, 705), size=(33, 23))
 
         #########PN Threshold#####
         #self.ShowCalculatedPN = wx.TextCtrl(self.SlopeFigurePanel, pos=(572, 538), size=(65, 23))
 
     def ShowResultTextCtrl(self):
 
-        self.CtrlLineResult_top = wx.TextCtrl(self.SlopeFigurePanel, pos=(118, 246), size=(61, 14))
-        self.CtrlLineMaxValue_top = wx.TextCtrl(self.SlopeFigurePanel, pos=(118, 271), size=(61, 14))
-        self.CtrlLineMinValue_top = wx.TextCtrl(self.SlopeFigurePanel, pos=(118, 296), size=(61, 14))
-        self.CtrlLineMaxPeak_top = wx.TextCtrl(self.SlopeFigurePanel, pos=(118, 321), size=(61, 14))
+        self.CtrlLineResult_top = wx.TextCtrl(self.SlopeFigurePanel, pos=(118, 246), size=(61, 18))
+        self.CtrlLineMaxValue_top = wx.TextCtrl(self.SlopeFigurePanel, pos=(118, 271), size=(61, 18))
+        self.CtrlLineMinValue_top = wx.TextCtrl(self.SlopeFigurePanel, pos=(118, 296), size=(61, 18))
+        self.CtrlLineMaxPeak_top = wx.TextCtrl(self.SlopeFigurePanel, pos=(118, 321), size=(61, 18))
 
-        self.TestLineResult_top = wx.TextCtrl(self.SlopeFigurePanel, pos=(248, 246), size=(61, 14))
-        self.TestLineMaxValueText_top = wx.TextCtrl(self.SlopeFigurePanel, pos=(248, 271), size=(61, 14))
-        self.TestLineMinValueText_top = wx.TextCtrl(self.SlopeFigurePanel, pos=(248, 296), size=(61, 14))
-        self.TestLineMaxPeakText_top = wx.TextCtrl(self.SlopeFigurePanel, pos=(248, 321), size=(61, 14))
+        self.TestLineResult_top = wx.TextCtrl(self.SlopeFigurePanel, pos=(248, 246), size=(61, 18))
+        self.TestLineMaxValueText_top = wx.TextCtrl(self.SlopeFigurePanel, pos=(248, 271), size=(61, 18))
+        self.TestLineMinValueText_top = wx.TextCtrl(self.SlopeFigurePanel, pos=(248, 296), size=(61, 18))
+        self.TestLineMaxPeakText_top = wx.TextCtrl(self.SlopeFigurePanel, pos=(248, 321), size=(61, 18))
 ####################################################################################################################################
-        self.CtrlLineResult_bot = wx.TextCtrl(self.SlopeFigurePanel, pos=(118, 369), size=(61, 14))
-        self.CtrlLineMaxValue_bot = wx.TextCtrl(self.SlopeFigurePanel, pos=(118, 394), size=(61, 14))
-        self.CtrlLineMinValue_bot = wx.TextCtrl(self.SlopeFigurePanel, pos=(118, 419), size=(61, 14))
-        self.CtrlLineMaxPeak_bot = wx.TextCtrl(self.SlopeFigurePanel, pos=(118, 444), size=(61, 14))
+        #################下方Contro line result和Test line result
+        self.CtrlLineResult_bot = wx.TextCtrl(self.SlopeFigurePanel, pos=(118, 369), size=(61, 18))
+        self.CtrlLineMaxValue_bot = wx.TextCtrl(self.SlopeFigurePanel, pos=(118, 394), size=(61, 18))
+        self.CtrlLineMinValue_bot = wx.TextCtrl(self.SlopeFigurePanel, pos=(118, 419), size=(61, 18))
+        self.CtrlLineMaxPeak_bot = wx.TextCtrl(self.SlopeFigurePanel, pos=(118, 444), size=(61, 18))
 
-        # self.TestLineResult_bot1 = wx.TextCtrl(self.SlopeFigurePanel, pos=(248, 246), size=(61, 14))
-        # self.TestLineMaxValueText_bot1 = wx.TextCtrl(self.SlopeFigurePanel, pos=(248, 271), size=(61, 14))
-        # self.TestLineMinValueText_bot1 = wx.TextCtrl(self.SlopeFigurePanel, pos=(248, 296), size=(61, 14))
-        # self.TestLineMaxPeakText_bot1 = wx.TextCtrl(self.SlopeFigurePanel, pos=(248, 321), size=(61, 14))
-        #
-        # self.TestLineResult_bot2 = wx.TextCtrl(self.SlopeFigurePanel, pos=(248, 246), size=(61, 14))
-        # self.TestLineMaxValueText_bot2 = wx.TextCtrl(self.SlopeFigurePanel, pos=(248, 271), size=(61, 14))
-        # self.TestLineMinValueText_bot2 = wx.TextCtrl(self.SlopeFigurePanel, pos=(248, 296), size=(61, 14))
-        # self.TestLineMaxPeakText_bot2 = wx.TextCtrl(self.SlopeFigurePanel, pos=(248, 321), size=(61, 14))
-        #
-        # self.TestLineResult_bot3 = wx.TextCtrl(self.SlopeFigurePanel, pos=(248, 246), size=(61, 14))
-        # self.TestLineMaxValueText_bot3 = wx.TextCtrl(self.SlopeFigurePanel, pos=(248, 271), size=(61, 14))
-        # self.TestLineMinValueText_bot3 = wx.TextCtrl(self.SlopeFigurePanel, pos=(248, 296), size=(61, 14))
-        # self.TestLineMaxPeakText_bot3 = wx.TextCtrl(self.SlopeFigurePanel, pos=(248, 321), size=(61, 14))
-        #
-        # self.TestLineResult_bot3 = wx.TextCtrl(self.SlopeFigurePanel, pos=(248, 246), size=(61, 14))
-        # self.TestLineMaxValueText_bot3 = wx.TextCtrl(self.SlopeFigurePanel, pos=(248, 271), size=(61, 14))
-        # self.TestLineMinValueText_bot3 = wx.TextCtrl(self.SlopeFigurePanel, pos=(248, 296), size=(61, 14))
-        # self.TestLineMaxPeakText_bot3 = wx.TextCtrl(self.SlopeFigurePanel, pos=(248, 321), size=(61, 14))
+        self.TestLineResult_bot1 = wx.TextCtrl(self.SlopeFigurePanel, pos=(248, 369), size=(61, 18))
+        self.TestLineMaxValueText_bot1 = wx.TextCtrl(self.SlopeFigurePanel, pos=(248, 394), size=(61, 18))
+        self.TestLineMinValueText_bot1 = wx.TextCtrl(self.SlopeFigurePanel, pos=(248, 419), size=(61, 18))
+        self.TestLineMaxPeakText_bot1 = wx.TextCtrl(self.SlopeFigurePanel, pos=(248, 444), size=(61, 18))
 
+        self.TestLineResult_bot2 = wx.TextCtrl(self.SlopeFigurePanel, pos=(378, 369), size=(61, 18))
+        self.TestLineMaxValueText_bot2 = wx.TextCtrl(self.SlopeFigurePanel, pos=(378, 394), size=(61, 18))#378
+        self.TestLineMinValueText_bot2 = wx.TextCtrl(self.SlopeFigurePanel, pos=(378, 419), size=(61, 18))
+        self.TestLineMaxPeakText_bot2 = wx.TextCtrl(self.SlopeFigurePanel, pos=(378, 444), size=(61, 18))
 
+        self.TestLineResult_bot3 = wx.TextCtrl(self.SlopeFigurePanel, pos=(508, 369), size=(61, 18))
+        self.TestLineMaxValueText_bot3 = wx.TextCtrl(self.SlopeFigurePanel, pos=(508, 394), size=(61, 18))#508
+        self.TestLineMinValueText_bot3 = wx.TextCtrl(self.SlopeFigurePanel, pos=(508, 419), size=(61, 18))
+        self.TestLineMaxPeakText_bot3 = wx.TextCtrl(self.SlopeFigurePanel, pos=(508, 444), size=(61, 18))
+
+        self.TestLineResult_bot4 = wx.TextCtrl(self.SlopeFigurePanel, pos=(638, 369), size=(61, 18))
+        self.TestLineMaxValueText_bot4 = wx.TextCtrl(self.SlopeFigurePanel, pos=(638, 394), size=(61, 18))
+        self.TestLineMinValueText_bot4 = wx.TextCtrl(self.SlopeFigurePanel, pos=(638, 419), size=(61, 18))#638
+        self.TestLineMaxPeakText_bot4 = wx.TextCtrl(self.SlopeFigurePanel, pos=(638, 444), size=(61, 18))
 
         #str = 'Result : \nMax Value : \nMini Value : \nMaxPeak : '
-
         # self.TextCtrlLineResult_top = wx.TextCtrl(self.SlopeFigurePanel, style=wx.TE_MULTILINE | wx.TE_READONLY | wx.NO_BORDER | wx.TE_NO_VSCROLL, value=str, id=wx.ID_ANY, pos=(50, 266), size=(145, 70))
         # self.TextTestLineResult_top = wx.TextCtrl(self.SlopeFigurePanel, style=wx.TE_MULTILINE | wx.TE_READONLY | wx.NO_BORDER | wx.TE_NO_VSCROLL, value=str, id=wx.ID_ANY, pos=(180, 266), size=(145, 70))
-
         # self.TextTestLineResultSec1 = wx.TextCtrl(self.SlopeFigurePanel, style=wx.TE_MULTILINE | wx.TE_READONLY | wx.NO_BORDER | wx.TE_NO_VSCROLL, value=str, id=wx.ID_ANY, pos=(180, 369), size=(145, 70))
         # self.TextTestLineResultSec2 = wx.TextCtrl(self.SlopeFigurePanel, style=wx.TE_MULTILINE | wx.TE_READONLY | wx.NO_BORDER | wx.TE_NO_VSCROLL, value=str, id=wx.ID_ANY, pos=(310, 369), size=(145, 70))
         # self.TextTestLineResultSec3 = wx.TextCtrl(self.SlopeFigurePanel, style=wx.TE_MULTILINE | wx.TE_READONLY | wx.NO_BORDER | wx.TE_NO_VSCROLL, value=str, id=wx.ID_ANY, pos=(440, 369), size=(145, 70))
         # self.TextTestLineResultSec4 = wx.TextCtrl(self.SlopeFigurePanel, style=wx.TE_MULTILINE | wx.TE_READONLY | wx.NO_BORDER | wx.TE_NO_VSCROLL, value=str, id=wx.ID_ANY, pos=(570, 369), size=(145, 70))
 
     def VirusColorOption(self):
-        self.ChoiceForDisease = wx.ComboBox(self.SlopeFigurePanel, value='', pos=(114, 505), choices=['Flu A', 'Flu B', 'Myco', 'RSV', 'hMPV', 'StrepA'], size=(100, 20))
-        self.ChoiceForCtrlLineRGB = wx.ComboBox(self.SlopeFigurePanel, value='', pos=(114, 565), choices=['R', 'G', 'B'], size=(100, 20))
-        self.ChoiceForTestLineRGB = wx.ComboBox(self.SlopeFigurePanel, value='', pos=(320, 565), choices=['R', 'G', 'B'], size=(100, 20))
+        self.ChoiceForDisease = wx.ComboBox(self.SlopeFigurePanel, value='', pos=(114, 525), choices=['Flu A', 'Flu B', 'Myco', 'RSV', 'hMPV', 'StrepA'], size=(100, 20))
+        self.ChoiceForCtrlLineRGB = wx.ComboBox(self.SlopeFigurePanel, value='', pos=(114, 585), choices=['R', 'G', 'B'], size=(100, 20))
+        self.ChoiceForTestLineRGB = wx.ComboBox(self.SlopeFigurePanel, value='', pos=(320, 585), choices=['R', 'G', 'B'], size=(100, 20))
 
     def CheckBoxForEnhance(self):
         self.CheckBoxEnhance = wx.CheckBox(self.ScrollPanel, id=wx.ID_ANY, label='Enhance', pos=(557, 545))
@@ -265,9 +282,9 @@ class MultiResultPanel(BasePanel):
     #         self.useFilter = False
 
     def CheckBoxAndComboBoxForSmoothFilter(self):
-        self.CheckBoxUseSmoothFilter = wx.CheckBox(self.SlopeFigurePanel, id=wx.ID_ANY, label='Use SmoothFilter', pos=(51, 455))
+        self.CheckBoxUseSmoothFilter = wx.CheckBox(self.SlopeFigurePanel, id=wx.ID_ANY, label='Use SmoothFilter', pos=(51, 475))#51, 455
         self.CheckBoxUseSmoothFilter.SetValue(True)
-        self.ComboBoxSmoothFilter = wx.ComboBox(self.SlopeFigurePanel, id=wx.ID_ANY, value='3', choices=['3', '5', '7', '9', '11', '13', '15'], pos=(172, 452))
+        self.ComboBoxSmoothFilter = wx.ComboBox(self.SlopeFigurePanel, id=wx.ID_ANY, value='3', choices=['3', '5', '7', '9', '11', '13', '15'], pos=(172, 472))
 
 
 
@@ -276,7 +293,7 @@ class MultiResultPanel(BasePanel):
             self.StdValue.SetValue('2')
             self.GeneratePN4Blocks()
             if self.FileExist()==True:
-                self.TestLineNoEvent()
+                self.TestLine(event=None)
             else:
                 self.TextCtrlLineResult.SetValue('')
                 #self.TextTestLineResult.SetValue('')
@@ -287,7 +304,7 @@ class MultiResultPanel(BasePanel):
         else:
             self.StdValue.SetValue('4')
             self.GeneratePN4Blocks()
-            self.TestLineNoEvent()
+            self.TestLine(event=None)
 
     def CheckBoxForWhiteBalance(self):
         self.CheckBoxUseWhiteBalance = wx.CheckBox(self.ScrollPanel, id=wx.ID_ANY, label='White Balance', pos=(638, 545))
@@ -306,17 +323,17 @@ class MultiResultPanel(BasePanel):
         self.Copy2TxtCtrl(self.rows)
 
     def ClickBtnPN(self):
-        self.PnThresholdBut = wx.Button(self.SlopeFigurePanel, label='Cal.', pos=(475, 622), size=(30,25))
+        self.PnThresholdBut = wx.Button(self.SlopeFigurePanel, label='Cal.', pos=(475, 642), size=(30,25))
 
     def CheckBoxFor4Blocks(self):
-        self.CheckBoxBlocks = wx.CheckBox(self.SlopeFigurePanel, id=wx.ID_ANY, label='4 Blocks Detection', pos=(232, 455))
+        self.CheckBoxBlocks = wx.CheckBox(self.SlopeFigurePanel, id=wx.ID_ANY, label='4 Blocks Detection', pos=(232, 475))
         self.CheckBoxBlocks.SetValue(False)
 
     def ScrollMenu(self):
         #4Blocks選單
-        self.BlockNum = wx.ComboBox(self.SlopeFigurePanel, value='4', choices=['4', '3', '2', '1'], pos=(362, 452))
+        self.BlockNum = wx.ComboBox(self.SlopeFigurePanel, value='4', choices=['4', '3', '2', '1'], pos=(362, 472))
         #標準差選單
-        self.StdValue = wx.ComboBox(self.SlopeFigurePanel, value='4', choices=['5', '4', '3', '2', '1'], pos=(510, 623), size=(51, 22))
+        self.StdValue = wx.ComboBox(self.SlopeFigurePanel, value='4', choices=['5', '4', '3', '2', '1'], pos=(510, 643), size=(51, 22))
 
     def GeneratePN(self, event):
         Disease = self.ChoiceForDisease.GetValue()
@@ -946,7 +963,7 @@ class MultiResultPanel(BasePanel):
         elif self.CheckBoxEnhance.GetValue() == False and self.CheckBoxUseWhiteBalance.GetValue() == True:
             img_enhance = white_balance(img)
         else:
-            img_enhance = im
+            img_enhance = img
 
 
 
@@ -1070,6 +1087,7 @@ class MultiResultPanel(BasePanel):
                 self.TestMinValue = self.CtrlResult[5]
 
         elif self.CheckBoxEnhance.GetValue()==True and self.CheckBoxBlocks.GetValue() == True:
+            print('Done')
             self.CtrlResult, self.result1, self.result2, self.test_result1_pred, self.test_result2_pred = algorithm3_with_slope_4block(self.img, self.line_para, True, self.CheckBoxUseWhiteBalance.GetValue(), self.CheckBoxUseSmoothFilter.GetValue(), int(self.ComboBoxSmoothFilter.GetValue()), True, False, num_positive=int(self.BlockNum.GetValue())) #Check
             if self.CtrlResult[0] == 1:
                 pass
@@ -1097,7 +1115,7 @@ class MultiResultPanel(BasePanel):
                 self.TestMinIndex = self.CtrlResult[4]
                 self.TestMinValue = self.CtrlResult[5]
 
-        else:# self.CheckBoxEnhance.GetValue() == False and self.CheckBoxBlocks.GetValue() == True:
+        elif self.CheckBoxEnhance.GetValue() == False and self.CheckBoxBlocks.GetValue() == True:
             self.CtrlResult, self.result1, self.result2, self.test_result1_pred, self.test_result2_pred = algorithm3_with_slope_4block(self.img, self.line_para, False, self.CheckBoxUseWhiteBalance.GetValue(), self.CheckBoxUseSmoothFilter.GetValue(), int(self.ComboBoxSmoothFilter.GetValue()), True, False, num_positive=int(self.BlockNum.GetValue())) #Check
             if self.CtrlResult[0] == 1:
                 pass
@@ -1121,15 +1139,27 @@ class MultiResultPanel(BasePanel):
         if self.ctrl_result == 'Positive':
             CtrlString = 'Result :'+self.ctrl_result+'\n'+'Max Value :'+str(CtrlMaxValue)+'\n'+'Mini Value :'+str(CtrlMinValue)+'\n'+'MaxPeak :'+str(CtrlMaxPeak)
             if self.CheckBoxBlocks.GetValue()==True:
-                self.TextCtrlLineResult.SetValue(CtrlString)
+                self.CtrlLineResult_bot.SetValue(self.ctrl_result)
+                self.CtrlLineMaxValue_bot.SetValue(str(CtrlMaxValue))
+                self.CtrlLineMinValue_bot.SetValue(str(CtrlMinValue))
+                self.CtrlLineMaxPeak_bot.SetValue(str(CtrlMaxPeak))
             else:
-                self.TextCtrlLineResult_top.SetValue(CtrlString)
+                self.CtrlLineResult_top.SetValue(self.ctrl_result)
+                self.CtrlLineMaxValue_top.SetValue(str(CtrlMaxValue))
+                self.CtrlLineMinValue_top.SetValue(str(CtrlMinValue))
+                self.CtrlLineMaxPeak_top.SetValue(str(CtrlMaxPeak))
         else:
             CtrlString = 'Result :'+'Line ERROR'+'\n'+'Max Value :'+str(CtrlMaxValue)+'\n'+'Mini Value :'+str(CtrlMinValue)+'\n'+'MaxPeak :'+str(CtrlMaxPeak)
             if self.CheckBoxBlocks.GetValue()==True:
-                self.TextCtrlLineResult.SetValue(CtrlString)
+                self.CtrlLineResult_bot.SetValue('Line ERROR')
+                self.CtrlLineMaxValue_bot.SetValue(str(CtrlMaxValue))
+                self.CtrlLineMinValue_bot.SetValue(str(CtrlMinValue))
+                self.CtrlLineMaxPeak_bot.SetValue(str(CtrlMaxPeak))
             else:
-                self.TextCtrlLineResult_top.SetValue(CtrlString)
+                self.CtrlLineResult_top.SetValue('Line ERROR')
+                self.CtrlLineMaxValue_top.SetValue(str(CtrlMaxValue))
+                self.CtrlLineMinValue_top.SetValue(str(CtrlMinValue))
+                self.CtrlLineMaxPeak_top.SetValue(str(CtrlMaxPeak))
             self.ResultText.SetLabel('Result : Line ERROR')
         #4色統計圖
         self.ShowOriginalImgChartForCtrlLine(self.Ctrl_start_interval, self.Ctrl_end_interval, 0, 250)
@@ -1158,19 +1188,51 @@ class MultiResultPanel(BasePanel):
 
                 if self.FileExist() == True:
                     #self.TextTestLineResult.SetValue('')
-                    self.TextTestLineResultSec1.SetValue('Result:' + self.ResultTextConvert(self.result1[0][0]) + '\n' + 'Max Value:' + str(
-                        np.around(self.result1[0][3], decimals=3)) + '\n' + 'Min Value:' + str(np.around(self.result1[0][5], decimals=3)) + '\n' + 'Max Peak:' + str(np.around(self.result1[0][1], decimals=3)))
-                    self.TextTestLineResultSec2.SetValue('Result:' + self.ResultTextConvert(self.result1[1][0]) + '\n' + 'Max Value:' + str(np.around(self.result1[1][3], decimals=3)) + '\n' + 'Min Value:' + str(np.around(self.result1[1][5], decimals=3)) + '\n' + 'Max Peak:' + str(np.around(self.result1[1][1], decimals=3)))
-                    self.TextTestLineResultSec3.SetValue('Result:' + self.ResultTextConvert(self.result1[2][0]) + '\n'+ 'Max Value:' + str(np.around(self.result1[2][3], decimals=3)) + '\n' + 'Min Value:' + str(np.around(self.result1[2][5], decimals=3)) + '\n' + 'Max Peak:' + str(np.around(self.result1[2][1], decimals=3)))
-                    self.TextTestLineResultSec4.SetValue('Result:' + self.ResultTextConvert(self.result1[3][0]) + '\n'+ 'Max Value:' + str(np.around(self.result1[3][3], decimals=3)) + '\n' + 'Min Value:' + str(np.around(self.result1[3][5], decimals=3)) + '\n' + 'Max Peak:' + str(np.around(self.result1[3][1], decimals=3)))
+                    #self.TextTestLineResultSec1.SetValue('Result:' + self.ResultTextConvert(self.result1[0][0]) + '\n' + 'Max Value:' + str(np.around(self.result1[0][3], decimals=3)) + '\n' + 'Min Value:' + str(np.around(self.result1[0][5], decimals=3)) + '\n' + 'Max Peak:' + str(np.around(self.result1[0][1], decimals=3)))
+                    #self.TextTestLineResultSec2.SetValue('Result:' + self.ResultTextConvert(self.result1[1][0]) + '\n' + 'Max Value:' + str(np.around(self.result1[1][3], decimals=3)) + '\n' + 'Min Value:' + str(np.around(self.result1[1][5], decimals=3)) + '\n' + 'Max Peak:' + str(np.around(self.result1[1][1], decimals=3)))
+                    #self.TextTestLineResultSec3.SetValue('Result:' + self.ResultTextConvert(self.result1[2][0]) + '\n'+ 'Max Value:' + str(np.around(self.result1[2][3], decimals=3)) + '\n' + 'Min Value:' + str(np.around(self.result1[2][5], decimals=3)) + '\n' + 'Max Peak:' + str(np.around(self.result1[2][1], decimals=3)))
+                    #self.TextTestLineResultSec4.SetValue('Result:' + self.ResultTextConvert(self.result1[3][0]) + '\n'+ 'Max Value:' + str(np.around(self.result1[3][3], decimals=3)) + '\n' + 'Min Value:' + str(np.around(self.result1[3][5], decimals=3)) + '\n' + 'Max Peak:' + str(np.around(self.result1[3][1], decimals=3)))
+
+                    self.TestLineResult_bot1.SetValue(self.ResultTextConvert(self.result1[0][0]))
+                    self.TestLineMaxValueText_bot1.SetValue(str(np.around(self.result1[0][3], decimals=3)))
+                    self.TestLineMinValueText_bot1.SetValue(str(np.around(self.result1[0][5], decimals=3)))
+                    self.TestLineMaxPeakText_bot1.SetValue(str(np.around(self.result1[0][1], decimals=3)))
+
+                    self.TestLineResult_bot2.SetValue(self.ResultTextConvert(self.result1[1][0]))
+                    self.TestLineMaxValueText_bot2.SetValue(str(np.around(self.result1[1][3], decimals=3)))
+                    self.TestLineMinValueText_bot2.SetValue(str(np.around(self.result1[1][5], decimals=3)))
+                    self.TestLineMaxPeakText_bot2.SetValue(str(np.around(self.result1[1][1], decimals=3)))
+
+                    self.TestLineResult_bot3.SetValue(self.ResultTextConvert(self.result1[2][0]))
+                    self.TestLineMaxValueText_bot3.SetValue(str(np.around(self.result1[2][3], decimals=3)))
+                    self.TestLineMinValueText_bot3.SetValue(str(np.around(self.result1[2][5], decimals=3)))
+                    self.TestLineMaxPeakText_bot3.SetValue(str(np.around(self.result1[2][1], decimals=3)))
+
+                    self.TestLineResult_bot4.SetValue(self.ResultTextConvert(self.result1[3][0]))
+                    self.TestLineMaxValueText_bot4.SetValue(str(np.around(self.result1[3][3], decimals=3)))
+                    self.TestLineMinValueText_bot4.SetValue(str(np.around(self.result1[3][5], decimals=3)))
+                    self.TestLineMaxPeakText_bot4.SetValue(str(np.around(self.result1[3][1], decimals=3)))
                 else:
                     #self.TextTestLineResult.SetValue('')
-                    self.TextCtrlLineResult.SetValue('')
-                    self.TextTestLineResultSec1.SetValue('')
-                    self.TextTestLineResultSec2.SetValue('')
-                    self.TextTestLineResultSec3.SetValue('')
-                    self.TextTestLineResultSec4.SetValue('')
+                    self.TestLineResult_bot1.SetValue('')
+                    self.TestLineMaxValueText_bot1.SetValue('')
+                    self.TestLineMinValueText_bot1.SetValue('')
+                    self.TestLineMaxPeakText_bot1.SetValue('')
 
+                    self.TestLineResult_bot2.SetValue('')
+                    self.TestLineMaxValueText_bot2.SetValue('')
+                    self.TestLineMinValueText_bot2.SetValue('')
+                    self.TestLineMaxPeakText_bot2.SetValue('')
+
+                    self.TestLineResult_bot3.SetValue('')
+                    self.TestLineMaxValueText_bot3.SetValue('')
+                    self.TestLineMinValueText_bot3.SetValue('')
+                    self.TestLineMaxPeakText_bot3.SetValue('')
+
+                    self.TestLineResult_bot4.SetValue('')
+                    self.TestLineMaxValueText_bot4.SetValue('')
+                    self.TestLineMinValueText_bot4.SetValue('')
+                    self.TestLineMaxPeakText_bot4.SetValue('')
 
             elif self.CheckBoxBlocks.GetValue() == True and self.CheckBoxEnhance.GetValue() == False:
                 self.Rect1.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.Block1Event)
@@ -1178,6 +1240,7 @@ class MultiResultPanel(BasePanel):
                 self.Rect3.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.Block3Event)
                 self.Rect4.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.Block4Event)
                 self.PlotCtrlLineBoundary()
+
                 if self.test_result1_pred == 1:
                     self.FinalTestResult = 'Positive'
                 else:
@@ -1186,24 +1249,85 @@ class MultiResultPanel(BasePanel):
                 self.SlopeStatisticsChartForCtrlLine(self.Ctrl_color, self.Ctrl_start_interval, self.Ctrl_end_interval, -20, 20)
                 if self.FileExist()==True:
                     #self.TextTestLineResult.SetValue('')
-                    self.TextTestLineResultSec1.SetValue('Result:'+self.ResultTextConvert(self.result1[0][0])+'\n'+'Max Value:'+str(np.around(self.result1[0][3], decimals=3))+'\n'+'Min Value:'+str(np.around(self.result1[0][5], decimals=3))+'\n'+'Max Peak:'+str(np.around(self.result1[0][1], decimals=3)))
-                    self.TextTestLineResultSec2.SetValue('Result:'+self.ResultTextConvert(self.result1[1][0])+'\n'+'Max Value:'+str(np.around(self.result1[1][3], decimals=3))+'\n'+'Min Value:'+str(np.around(self.result1[1][5], decimals=3))+'\n'+'Max Peak:'+str(np.around(self.result1[1][1], decimals=3)))
-                    self.TextTestLineResultSec3.SetValue('Result:'+self.ResultTextConvert(self.result1[2][0])+'\n'+'Max Value:'+str(np.around(self.result1[2][3], decimals=3))+'\n'+'Min Value:'+str(np.around(self.result1[2][5], decimals=3))+'\n'+'Max Peak:'+str(np.around(self.result1[2][1], decimals=3)))
-                    self.TextTestLineResultSec4.SetValue('Result:'+self.ResultTextConvert(self.result1[3][0])+'\n'+'Max Value:'+str(np.around(self.result1[3][3], decimals=3))+'\n'+'Min Value:'+str(np.around(self.result1[3][5], decimals=3))+'\n'+'Max Peak:'+str(np.around(self.result1[3][1], decimals=3)))
+                    # self.TextTestLineResultSec1.SetValue('Result:'+self.ResultTextConvert(self.result1[0][0])+'\n'+'Max Value:'+str(np.around(self.result1[0][3], decimals=3))+'\n'+'Min Value:'+str(np.around(self.result1[0][5], decimals=3))+'\n'+'Max Peak:'+str(np.around(self.result1[0][1], decimals=3)))
+                    # self.TextTestLineResultSec2.SetValue('Result:'+self.ResultTextConvert(self.result1[1][0])+'\n'+'Max Value:'+str(np.around(self.result1[1][3], decimals=3))+'\n'+'Min Value:'+str(np.around(self.result1[1][5], decimals=3))+'\n'+'Max Peak:'+str(np.around(self.result1[1][1], decimals=3)))
+                    # self.TextTestLineResultSec3.SetValue('Result:'+self.ResultTextConvert(self.result1[2][0])+'\n'+'Max Value:'+str(np.around(self.result1[2][3], decimals=3))+'\n'+'Min Value:'+str(np.around(self.result1[2][5], decimals=3))+'\n'+'Max Peak:'+str(np.around(self.result1[2][1], decimals=3)))
+                    # self.TextTestLineResultSec4.SetValue('Result:'+self.ResultTextConvert(self.result1[3][0])+'\n'+'Max Value:'+str(np.around(self.result1[3][3], decimals=3))+'\n'+'Min Value:'+str(np.around(self.result1[3][5], decimals=3))+'\n'+'Max Peak:'+str(np.around(self.result1[3][1], decimals=3)))
+
+                    self.TestLineResult_bot1.SetValue(self.ResultTextConvert(self.result1[0][0]))
+                    self.TestLineMaxValueText_bot1.SetValue(str(np.around(self.result1[0][3], decimals=3)))
+                    self.TestLineMinValueText_bot1.SetValue(str(np.around(self.result1[0][5], decimals=3)))
+                    self.TestLineMaxPeakText_bot1.SetValue(str(np.around(self.result1[0][1], decimals=3)))
+
+                    self.TestLineResult_bot2.SetValue(self.ResultTextConvert(self.result1[1][0]))
+                    self.TestLineMaxValueText_bot2.SetValue(str(np.around(self.result1[1][3], decimals=3)))
+                    self.TestLineMinValueText_bot2.SetValue(str(np.around(self.result1[1][5], decimals=3)))
+                    self.TestLineMaxPeakText_bot2.SetValue(str(np.around(self.result1[1][1], decimals=3)))
+
+                    self.TestLineResult_bot3.SetValue(self.ResultTextConvert(self.result1[2][0]))
+                    self.TestLineMaxValueText_bot3.SetValue(str(np.around(self.result1[2][3], decimals=3)))
+                    self.TestLineMinValueText_bot3.SetValue(str(np.around(self.result1[2][5], decimals=3)))
+                    self.TestLineMaxPeakText_bot3.SetValue(str(np.around(self.result1[2][1], decimals=3)))
+
+                    self.TestLineResult_bot4.SetValue(self.ResultTextConvert(self.result1[3][0]))
+                    self.TestLineMaxValueText_bot4.SetValue(str(np.around(self.result1[3][3], decimals=3)))
+                    self.TestLineMinValueText_bot4.SetValue(str(np.around(self.result1[3][5], decimals=3)))
+                    self.TestLineMaxPeakText_bot4.SetValue(str(np.around(self.result1[3][1], decimals=3)))
                 else:
                     #self.TextTestLineResult.SetValue('')
-                    self.TextCtrlLineResult.SetValue('')
-                    self.TextTestLineResultSec1.SetValue('')
-                    self.TextTestLineResultSec2.SetValue('')
-                    self.TextTestLineResultSec3.SetValue('')
-                    self.TextTestLineResultSec4.SetValue('')
+                    self.TestLineResult_bot1.SetValue('')
+                    self.TestLineMaxValueText_bot1.SetValue('')
+                    self.TestLineMinValueText_bot1.SetValue('')
+                    self.TestLineMaxPeakText_bot1.SetValue('')
 
+                    self.TestLineResult_bot2.SetValue('')
+                    self.TestLineMaxValueText_bot2.SetValue('')
+                    self.TestLineMinValueText_bot2.SetValue('')
+                    self.TestLineMaxPeakText_bot2.SetValue('')
+
+                    self.TestLineResult_bot3.SetValue('')
+                    self.TestLineMaxValueText_bot3.SetValue('')
+                    self.TestLineMinValueText_bot3.SetValue('')
+                    self.TestLineMaxPeakText_bot3.SetValue('')
+
+                    self.TestLineResult_bot4.SetValue('')
+                    self.TestLineMaxValueText_bot4.SetValue('')
+                    self.TestLineMinValueText_bot4.SetValue('')
+                    self.TestLineMaxPeakText_bot4.SetValue('')
             else:
                 self.SlopeStatisticsChartForCtrlLine(self.Ctrl_color, self.Ctrl_start_interval, self.Ctrl_end_interval, -20, 20)
                 self.SlopeStatisticsChartForTestLine(self.Test_color, self.Test_start_interval, self.Test_end_interval, -20, 20)
-                TestString = 'Result :' + self.FinalTestResult + '\n'+'Max Value :' + str(np.round(self.result1[3], decimals=3)) + '\n' + 'Mini Value :' + str(np.round(self.result1[5], decimals=3)) + '\n' + 'MaxPeak :' + str(np.round(self.result1[1], decimals=3))
+
+                # TestString = 'Result :' + self.FinalTestResult + '\n'+'Max Value :' + str(np.round(self.result1[3], decimals=3)) + '\n' + 'Mini Value :' + str(np.round(self.result1[5], decimals=3)) + '\n' + 'MaxPeak :' + str(np.round(self.result1[1], decimals=3))
                 self.ResultText.SetLabel('Result : ' + self.FinalTestResult)
-                self.TextTestLineResult_top.SetValue(TestString)
+                # self.TextTestLineResult_top.SetValue(TestString)
+
+                self.TestLineResult_top.SetValue(self.FinalTestResult)
+                self.TestLineMaxValueText_top.SetValue(str(np.round(self.result1[3], decimals=3)))
+                self.TestLineMinValueText_top.SetValue(str(np.round(self.result1[5], decimals=3)))
+                self.TestLineMaxPeakText_top.SetValue(str(np.round(self.result1[1], decimals=3)))
+
+                self.TestLineResult_bot1.SetValue('')
+                self.TestLineMaxValueText_bot1.SetValue('')
+                self.TestLineMinValueText_bot1.SetValue('')
+                self.TestLineMaxPeakText_bot1.SetValue('')
+
+                self.TestLineResult_bot2.SetValue('')
+                self.TestLineMaxValueText_bot2.SetValue('')
+                self.TestLineMinValueText_bot2.SetValue('')
+                self.TestLineMaxPeakText_bot2.SetValue('')
+
+                self.TestLineResult_bot3.SetValue('')
+                self.TestLineMaxValueText_bot3.SetValue('')
+                self.TestLineMinValueText_bot3.SetValue('')
+                self.TestLineMaxPeakText_bot3.SetValue('')
+
+                self.TestLineResult_bot4.SetValue('')
+                self.TestLineMaxValueText_bot4.SetValue('')
+                self.TestLineMinValueText_bot4.SetValue('')
+                self.TestLineMaxPeakText_bot4.SetValue('')
+
+
                 self.PlotCtrlLineBoundary()
                 self.PlotTestLineBoundary()
                 # self.TextTestLineResultSec1.SetValue('')
@@ -1217,114 +1341,133 @@ class MultiResultPanel(BasePanel):
             self.SlopeStatisticsChartForCtrlLine(self.Ctrl_color, self.Ctrl_start_interval, self.Ctrl_end_interval, -20,20)
             self.SlopeStatisticsChartForTestLine(self.Test_color, self.Ctrl_start_interval, self.Ctrl_end_interval, -20, 20)
             #self.TextTestLineResult.SetValue('')
-            self.TextTestLineResultSec1.SetValue('')
-            self.TextTestLineResultSec2.SetValue('')
-            self.TextTestLineResultSec3.SetValue('')
-            self.TextTestLineResultSec4.SetValue('')
+            # self.TextTestLineResultSec1.SetValue('')
+            # self.TextTestLineResultSec2.SetValue('')
+            # self.TextTestLineResultSec3.SetValue('')
+            # self.TextTestLineResultSec4.SetValue('')
+            self.TestLineResult_bot1.SetValue('')
+            self.TestLineMaxValueText_bot1.SetValue('')
+            self.TestLineMinValueText_bot1.SetValue('')
+            self.TestLineMaxPeakText_bot1.SetValue('')
 
-    def TestLineNoEvent(self):
-        self.CtrlLine()
+            self.TestLineResult_bot2.SetValue('')
+            self.TestLineMaxValueText_bot2.SetValue('')
+            self.TestLineMinValueText_bot2.SetValue('')
+            self.TestLineMaxPeakText_bot2.SetValue('')
 
-        if self.ctrl_result == 'Positive':
-            if self.CheckBoxBlocks.GetValue() == True and self.CheckBoxEnhance.GetValue() == True:
-                self.Rect5.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.Block5Event)
-                self.Rect6.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.Block6Event)
-                self.Rect7.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.Block7Event)
-                self.Rect8.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.Block8Event)
-                self.PlotCtrlLineBoundary()
-                if self.test_result1_pred == 1:
-                    self.FinalTestResult = 'Positive'
-                else:
-                    self.FinalTestResult = 'Negative'
-                self.ResultText.SetLabel('Result : ' + self.FinalTestResult)
-                self.SlopeStatisticsChartForCtrlLine(self.Ctrl_color, self.Ctrl_start_interval, self.Ctrl_end_interval, -20, 20)
-                if self.FileExist()==True:
-                    #self.TextTestLineResult.SetValue('')
-                    self.TextTestLineResultSec1.SetValue('Result:'+self.ResultTextConvert(self.result1[0][0])+'\n'
-                                                         +'Max Value:'+str(np.around(self.result1[0][3], decimals=3))+'\n'
-                                                         +'Min Value:'+str(np.around(self.result1[0][5], decimals=3))+'\n'
-                                                         +'Max Peak:'+str(np.around(self.result1[0][1], decimals=3)))
-                    self.TextTestLineResultSec2.SetValue('Result:'+self.ResultTextConvert(self.result1[1][0])+'\n'
-                                                         +'Max Value:'+str(np.around(self.result1[1][3], decimals=3))+'\n'
-                                                         +'Min Value:'+str(np.around(self.result1[1][5], decimals=3))+'\n'
-                                                         +'Max Peak:'+str(np.around(self.result1[1][1], decimals=3)))
-                    self.TextTestLineResultSec3.SetValue('Result:'+self.ResultTextConvert(self.result1[2][0])+'\n'
-                                                         +'Max Value:'+str(np.around(self.result1[2][3], decimals=3))+'\n'
-                                                         +'Min Value:'+str(np.around(self.result1[2][5], decimals=3))+'\n'
-                                                         +'Max Peak:'+str(np.around(self.result1[2][1], decimals=3)))
-                    self.TextTestLineResultSec4.SetValue('Result:'+self.ResultTextConvert(self.result1[3][0])+'\n'
-                                                         +'Max Value:'+str(np.around(self.result1[3][3], decimals=3))+'\n'
-                                                         +'Min Value:'+str(np.around(self.result1[3][5], decimals=3))+'\n'
-                                                         +'Max Peak:'+str(np.around(self.result1[3][1], decimals=3)))
-                else:
-                    #self.TextTestLineResult.SetValue('')
-                    self.TextCtrlLineResult.SetValue('')
-                    self.TextTestLineResultSec1.SetValue('')
-                    self.TextTestLineResultSec2.SetValue('')
-                    self.TextTestLineResultSec3.SetValue('')
-                    self.TextTestLineResultSec4.SetValue('')
+            self.TestLineResult_bot3.SetValue('')
+            self.TestLineMaxValueText_bot3.SetValue('')
+            self.TestLineMinValueText_bot3.SetValue('')
+            self.TestLineMaxPeakText_bot3.SetValue('')
 
-            elif self.CheckBoxBlocks.GetValue() == True and self.CheckBoxEnhance.GetValue() == False:
-                self.Rect1.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.Block1Event)
-                self.Rect2.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.Block2Event)
-                self.Rect3.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.Block3Event)
-                self.Rect4.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.Block4Event)
-                self.PlotCtrlLineBoundary()
-                if self.test_result1_pred == 1:
-                    self.FinalTestResult = 'Positive'
-                else:
-                    self.FinalTestResult = 'Negative'
-                self.ResultText.SetLabel('Result : '+self.FinalTestResult)
-                self.SlopeStatisticsChartForCtrlLine(self.Ctrl_color, self.Ctrl_start_interval, self.Ctrl_end_interval, -20, 20)
-                if self.FileExist()==True:
-                    #self.TextTestLineResult.SetValue('')
-                    self.TextTestLineResultSec1.SetValue('Result:'+self.ResultTextConvert(self.result1[0][0])+'\n'
-                                                         +'Max Value:'+str(np.around(self.result1[0][3], decimals=3))+'\n'
-                                                         +'Min Value:'+str(np.around(self.result1[0][5], decimals=3))+'\n'
-                                                         +'Max Peak:'+str(np.around(self.result1[0][1], decimals=3)))
-                    self.TextTestLineResultSec2.SetValue('Result:'+self.ResultTextConvert(self.result1[1][0])+'\n'
-                                                         +'Max Value:'+str(np.around(self.result1[1][3], decimals=3))+'\n'
-                                                         +'Min Value:'+str(np.around(self.result1[1][5], decimals=3))+'\n'
-                                                         +'Max Peak:'+str(np.around(self.result1[1][1], decimals=3)))
-                    self.TextTestLineResultSec3.SetValue('Result:'+self.ResultTextConvert(self.result1[2][0])+'\n'
-                                                         +'Max Value:'+str(np.around(self.result1[2][3], decimals=3))+'\n'
-                                                         +'Min Value:'+str(np.around(self.result1[2][5], decimals=3))+'\n'
-                                                         +'Max Peak:'+str(np.around(self.result1[2][1], decimals=3)))
-                    self.TextTestLineResultSec4.SetValue('Result:'+self.ResultTextConvert(self.result1[3][0])+'\n'
-                                                         +'Max Value:'+str(np.around(self.result1[3][3], decimals=3))+'\n'
-                                                         +'Min Value:'+str(np.around(self.result1[3][5], decimals=3))+'\n'
-                                                         +'Max Peak:'+str(np.around(self.result1[3][1], decimals=3)))
-                else:
-                    #self.TextTestLineResult.SetValue('')
-                    self.TextCtrlLineResult.SetValue('')
-                    self.TextTestLineResultSec1.SetValue('')
-                    self.TextTestLineResultSec2.SetValue('')
-                    self.TextTestLineResultSec3.SetValue('')
-                    self.TextTestLineResultSec4.SetValue('')
+            self.TestLineResult_bot4.SetValue('')
+            self.TestLineMaxValueText_bot4.SetValue('')
+            self.TestLineMinValueText_bot4.SetValue('')
+            self.TestLineMaxPeakText_bot4.SetValue('')
 
-            else:
-                self.SlopeStatisticsChartForCtrlLine(self.Ctrl_color, self.Ctrl_start_interval, self.Ctrl_end_interval, -20, 20)
-                self.SlopeStatisticsChartForTestLine(self.Test_color, self.Test_start_interval, self.Test_end_interval, -20, 20)
-                TestString = 'Result :' + self.FinalTestResult + '\n'+'Max Value :' + str(np.round(self.result1[3], decimals=3)) + '\n' + 'Mini Value :' + str(np.round(self.result1[5], decimals=3)) + '\n' + 'MaxPeak :' + str(np.round(self.result1[1], decimals=3))
-                self.ResultText.SetLabel('Result : ' + self.FinalTestResult)
-                self.TextTestLineResult_top.SetValue(TestString)
-                self.PlotCtrlLineBoundary()
-                self.PlotTestLineBoundary()
-                # self.TextTestLineResultSec1.SetValue('')
-                # self.TextTestLineResultSec2.SetValue('')
-                # self.TextTestLineResultSec3.SetValue('')
-                # self.TextTestLineResultSec4.SetValue('')
-        else:
-            #print(np.mean(self.TestDFArr))
-            self.PlotCtrlLineBoundary()
-            #self.PlotTestLineBoundary()
-            self.SlopeStatisticsChartForCtrlLine(self.Ctrl_color, self.Ctrl_start_interval, self.Ctrl_end_interval, -20,20)
-            self.SlopeStatisticsChartForTestLine(self.Test_color, self.Ctrl_start_interval, self.Ctrl_end_interval, -20, 20)
-            #self.TextTestLineResult.SetValue('')
-            self.TextTestLineResultSec1.SetValue('')
-            self.TextTestLineResultSec2.SetValue('')
-            self.TextTestLineResultSec3.SetValue('')
-            self.TextTestLineResultSec4.SetValue('')
+    # def TestLineNoEvent(self):
+    #     self.CtrlLine()
+    #
+    #     if self.ctrl_result == 'Positive':
+    #         if self.CheckBoxBlocks.GetValue() == True and self.CheckBoxEnhance.GetValue() == True:
+    #             self.Rect5.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.Block5Event)
+    #             self.Rect6.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.Block6Event)
+    #             self.Rect7.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.Block7Event)
+    #             self.Rect8.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.Block8Event)
+    #             self.PlotCtrlLineBoundary()
+    #             if self.test_result1_pred == 1:
+    #                 self.FinalTestResult = 'Positive'
+    #             else:
+    #                 self.FinalTestResult = 'Negative'
+    #             self.ResultText.SetLabel('Result : ' + self.FinalTestResult)
+    #             self.SlopeStatisticsChartForCtrlLine(self.Ctrl_color, self.Ctrl_start_interval, self.Ctrl_end_interval, -20, 20)
+    #             if self.FileExist()==True:
+    #                 #self.TextTestLineResult.SetValue('')
+    #                 self.TextTestLineResultSec1.SetValue('Result:'+self.ResultTextConvert(self.result1[0][0])+'\n'
+    #                                                      +'Max Value:'+str(np.around(self.result1[0][3], decimals=3))+'\n'
+    #                                                      +'Min Value:'+str(np.around(self.result1[0][5], decimals=3))+'\n'
+    #                                                      +'Max Peak:'+str(np.around(self.result1[0][1], decimals=3)))
+    #                 self.TextTestLineResultSec2.SetValue('Result:'+self.ResultTextConvert(self.result1[1][0])+'\n'
+    #                                                      +'Max Value:'+str(np.around(self.result1[1][3], decimals=3))+'\n'
+    #                                                      +'Min Value:'+str(np.around(self.result1[1][5], decimals=3))+'\n'
+    #                                                      +'Max Peak:'+str(np.around(self.result1[1][1], decimals=3)))
+    #                 self.TextTestLineResultSec3.SetValue('Result:'+self.ResultTextConvert(self.result1[2][0])+'\n'
+    #                                                      +'Max Value:'+str(np.around(self.result1[2][3], decimals=3))+'\n'
+    #                                                      +'Min Value:'+str(np.around(self.result1[2][5], decimals=3))+'\n'
+    #                                                      +'Max Peak:'+str(np.around(self.result1[2][1], decimals=3)))
+    #                 self.TextTestLineResultSec4.SetValue('Result:'+self.ResultTextConvert(self.result1[3][0])+'\n'
+    #                                                      +'Max Value:'+str(np.around(self.result1[3][3], decimals=3))+'\n'
+    #                                                      +'Min Value:'+str(np.around(self.result1[3][5], decimals=3))+'\n'
+    #                                                      +'Max Peak:'+str(np.around(self.result1[3][1], decimals=3)))
+    #             else:
+    #                 #self.TextTestLineResult.SetValue('')
+    #                 self.TextCtrlLineResult.SetValue('')
+    #                 self.TextTestLineResultSec1.SetValue('')
+    #                 self.TextTestLineResultSec2.SetValue('')
+    #                 self.TextTestLineResultSec3.SetValue('')
+    #                 self.TextTestLineResultSec4.SetValue('')
+    #
+    #         elif self.CheckBoxBlocks.GetValue() == True and self.CheckBoxEnhance.GetValue() == False:
+    #             self.Rect1.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.Block1Event)
+    #             self.Rect2.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.Block2Event)
+    #             self.Rect3.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.Block3Event)
+    #             self.Rect4.Bind(FloatCanvas.EVT_FC_LEFT_DOWN, self.Block4Event)
+    #             self.PlotCtrlLineBoundary()
+    #             if self.test_result1_pred == 1:
+    #                 self.FinalTestResult = 'Positive'
+    #             else:
+    #                 self.FinalTestResult = 'Negative'
+    #             self.ResultText.SetLabel('Result : '+self.FinalTestResult)
+    #             self.SlopeStatisticsChartForCtrlLine(self.Ctrl_color, self.Ctrl_start_interval, self.Ctrl_end_interval, -20, 20)
+    #             if self.FileExist()==True:
+    #                 #self.TextTestLineResult.SetValue('')
+    #                 self.TextTestLineResultSec1.SetValue('Result:'+self.ResultTextConvert(self.result1[0][0])+'\n'
+    #                                                      +'Max Value:'+str(np.around(self.result1[0][3], decimals=3))+'\n'
+    #                                                      +'Min Value:'+str(np.around(self.result1[0][5], decimals=3))+'\n'
+    #                                                      +'Max Peak:'+str(np.around(self.result1[0][1], decimals=3)))
+    #                 self.TextTestLineResultSec2.SetValue('Result:'+self.ResultTextConvert(self.result1[1][0])+'\n'
+    #                                                      +'Max Value:'+str(np.around(self.result1[1][3], decimals=3))+'\n'
+    #                                                      +'Min Value:'+str(np.around(self.result1[1][5], decimals=3))+'\n'
+    #                                                      +'Max Peak:'+str(np.around(self.result1[1][1], decimals=3)))
+    #                 self.TextTestLineResultSec3.SetValue('Result:'+self.ResultTextConvert(self.result1[2][0])+'\n'
+    #                                                      +'Max Value:'+str(np.around(self.result1[2][3], decimals=3))+'\n'
+    #                                                      +'Min Value:'+str(np.around(self.result1[2][5], decimals=3))+'\n'
+    #                                                      +'Max Peak:'+str(np.around(self.result1[2][1], decimals=3)))
+    #                 self.TextTestLineResultSec4.SetValue('Result:'+self.ResultTextConvert(self.result1[3][0])+'\n'
+    #                                                      +'Max Value:'+str(np.around(self.result1[3][3], decimals=3))+'\n'
+    #                                                      +'Min Value:'+str(np.around(self.result1[3][5], decimals=3))+'\n'
+    #                                                      +'Max Peak:'+str(np.around(self.result1[3][1], decimals=3)))
+    #             else:
+    #                 #self.TextTestLineResult.SetValue('')
+    #                 self.TextCtrlLineResult.SetValue('')
+    #                 self.TextTestLineResultSec1.SetValue('')
+    #                 self.TextTestLineResultSec2.SetValue('')
+    #                 self.TextTestLineResultSec3.SetValue('')
+    #                 self.TextTestLineResultSec4.SetValue('')
+    #
+    #         else:
+    #             self.SlopeStatisticsChartForCtrlLine(self.Ctrl_color, self.Ctrl_start_interval, self.Ctrl_end_interval, -20, 20)
+    #             self.SlopeStatisticsChartForTestLine(self.Test_color, self.Test_start_interval, self.Test_end_interval, -20, 20)
+    #             TestString = 'Result :' + self.FinalTestResult + '\n'+'Max Value :' + str(np.round(self.result1[3], decimals=3)) + '\n' + 'Mini Value :' + str(np.round(self.result1[5], decimals=3)) + '\n' + 'MaxPeak :' + str(np.round(self.result1[1], decimals=3))
+    #             self.ResultText.SetLabel('Result : ' + self.FinalTestResult)
+    #             self.TextTestLineResult_top.SetValue(TestString)
+    #             self.PlotCtrlLineBoundary()
+    #             self.PlotTestLineBoundary()
+    #             # self.TextTestLineResultSec1.SetValue('')
+    #             # self.TextTestLineResultSec2.SetValue('')
+    #             # self.TextTestLineResultSec3.SetValue('')
+    #             # self.TextTestLineResultSec4.SetValue('')
+    #     else:
+    #         #print(np.mean(self.TestDFArr))
+    #         self.PlotCtrlLineBoundary()
+    #         #self.PlotTestLineBoundary()
+    #         self.SlopeStatisticsChartForCtrlLine(self.Ctrl_color, self.Ctrl_start_interval, self.Ctrl_end_interval, -20,20)
+    #         self.SlopeStatisticsChartForTestLine(self.Test_color, self.Ctrl_start_interval, self.Ctrl_end_interval, -20, 20)
+    #         #self.TextTestLineResult.SetValue('')
+    #         # self.TextTestLineResultSec1.SetValue('')
+    #         # self.TextTestLineResultSec2.SetValue('')
+    #         # self.TextTestLineResultSec3.SetValue('')
+    #         # self.TextTestLineResultSec4.SetValue('')
 
 
     def SlopeStatisticsChartForCtrlLine(self, color, start_interval, end_interval, y_start, y_end):
@@ -1435,7 +1578,7 @@ class MultiResultPanel(BasePanel):
         self.OriginalImgChart.draw()
 
     def ShowEnhancedImgChartForCtrlLine(self, start_interval, end_interval, y_start, y_end):
-        df = self.ShowPlot(self.TestLineMultiDFArr)
+        df = self.ShowPlot_Enhance(self.TestLineMultiDFArr)
         self.EnhancedImgFig.set_figheight(2)
         self.EnhancedImgFig.set_figwidth(4.5)
         self.axes_EnhancedImg = self.EnhancedImgFig.add_subplot(1, 1, 1)
@@ -1464,9 +1607,20 @@ class MultiResultPanel(BasePanel):
 
     def ShowPlot(self, im):
         image = np.array(im)
-        if self.CheckBoxEnhance.GetValue()==True and self.CheckBoxUseWhiteBalance.GetValue()==False:
+        r, g, b = image[:, :, 0], image[:, :, 1], image[:, :, 2]
+        r = np.average(np.transpose(r), axis=1)
+        g = np.average(np.transpose(g), axis=1)
+        b = np.average(np.transpose(b), axis=1)
+        gray = np.average(np.average(np.transpose(image), axis=0), axis=1)
+        pic_width_pixel = np.size(r, 0)
+        df = pd.DataFrame({'x': range(0, pic_width_pixel), 'j1': r, 'j2': g, 'j3': b, 'j4': gray})
+        return df
+
+    def ShowPlot_Enhance(self, im):
+        image = np.array(im)
+        if self.CheckBoxEnhance.GetValue() == True and self.CheckBoxUseWhiteBalance.GetValue() == False:
             image = gamma_enhance(image)
-        elif self.CheckBoxEnhance.GetValue()==True and self.CheckBoxUseWhiteBalance.GetValue()==True:
+        elif self.CheckBoxEnhance.GetValue() == True and self.CheckBoxUseWhiteBalance.GetValue() == True:
             image = gamma_enhance(image)
             image = white_balance(image)
         elif self.CheckBoxEnhance.GetValue() == False and self.CheckBoxUseWhiteBalance.GetValue() == True:
@@ -1506,11 +1660,14 @@ class MultiResultPanel(BasePanel):
 
     def PlotCtrlLineBoundary(self):
         if self.boundary_original_ctrl_rect is None:
+            print('1')
             self.OriginalImgBoundaryLineForCtrlLine(self.OriginalImg, int(self.InputValueTxtCtrlLineRS.GetValue()), int(self.InputValueTxtCtrlLineRE.GetValue()))
             self.EnhancedImgBoundaryLineForCtrlLine(self.EnhanceImg, int(self.InputValueTxtCtrlLineRS.GetValue()), int(self.InputValueTxtCtrlLineRE.GetValue()))
             self.boundary_original_ctrl_rect.SetColor('green')
             self.boundary_enhanced_ctrl_rect.SetColor('green')
+
         if self.boundary_original_ctrl_rect is not None:
+            print('2')
             self.SetBoundaryLineForCtrlLine(self.OriginalImg, int(self.InputValueTxtCtrlLineRS.GetValue()), int(self.InputValueTxtCtrlLineRE.GetValue()))
             self.boundary_original_ctrl_rect.SetColor('green')
             self.boundary_enhanced_ctrl_rect.SetColor('green')
@@ -1609,20 +1766,30 @@ class MultiResultPanel(BasePanel):
         self.Rect7 = Rectangle(XY3, WH, LineColor="Red", LineStyle="Solid", LineWidth=1, FillColor='White', FillStyle="Transparent")
         self.Rect8 = Rectangle(XY4, WH, LineColor="Red", LineStyle="Solid", LineWidth=1, FillColor='White', FillStyle="Transparent")
 
-        if self.CheckBoxEnhance.GetValue() == True and self.CtrlResult[0]==1:
+        if self.CheckBoxEnhance.GetValue() == True and self.CheckBoxUseWhiteBalance.GetValue() == True and self.CtrlResult[0]==1:
             EnhancedPanel.AddObject(self.Rect5)
             EnhancedPanel.AddObject(self.Rect6)
             EnhancedPanel.AddObject(self.Rect7)
             EnhancedPanel.AddObject(self.Rect8)
-            EnhancedPanel.Draw(True)
-        elif self.CheckBoxEnhance.GetValue() == False and self.CtrlResult[0]==1:
+            EnhancedPanel.Draw(Force=True)
+        elif self.CheckBoxEnhance.GetValue() == False and self.CheckBoxUseWhiteBalance.GetValue() == True and self.CtrlResult[0]==1:
+            EnhancedPanel.AddObject(self.Rect1)
+            EnhancedPanel.AddObject(self.Rect2)
+            EnhancedPanel.AddObject(self.Rect3)
+            EnhancedPanel.AddObject(self.Rect4)
+            EnhancedPanel.Draw(Force=True)
+        elif self.CheckBoxEnhance.GetValue() == False and self.CheckBoxUseWhiteBalance.GetValue() == False and self.CtrlResult[0]==1:
             OriginalPanel.AddObject(self.Rect1)
             OriginalPanel.AddObject(self.Rect2)
             OriginalPanel.AddObject(self.Rect3)
             OriginalPanel.AddObject(self.Rect4)
-            OriginalPanel.Draw(True)
-        else:
-            pass
+            OriginalPanel.Draw(Force=True)
+        elif self.CheckBoxEnhance.GetValue() == True and self.CheckBoxUseWhiteBalance.GetValue() == False and self.CtrlResult[0]==1:
+            EnhancedPanel.AddObject(self.Rect5)
+            EnhancedPanel.AddObject(self.Rect6)
+            EnhancedPanel.AddObject(self.Rect7)
+            EnhancedPanel.AddObject(self.Rect8)
+            EnhancedPanel.Draw(Force=True)
 
     def ResultTextConvert(self, text):
         if text == 1:
@@ -1883,10 +2050,10 @@ class MultiResultPanel(BasePanel):
         TestMaxDiff = str(np.around(self.result1[0][1], decimals=3))
         self.TestDFArr = self.result1[0][6]
 
-        self.Rect1.SetLineColor('Red')
-        self.Rect2.SetLineColor('Red')
-        self.Rect3.SetLineColor('Red')
-        self.Rect4.SetLineColor('Red')
+        # self.Rect1.SetLineColor('Red')
+        # self.Rect2.SetLineColor('Red')
+        # self.Rect3.SetLineColor('Red')
+        # self.Rect4.SetLineColor('Red')
         self.Rect5.SetLineColor('Red')
         self.Rect6.SetLineColor('Red')
         self.Rect7.SetLineColor('Red')

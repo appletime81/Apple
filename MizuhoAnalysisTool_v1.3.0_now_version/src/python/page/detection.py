@@ -223,6 +223,7 @@ class DetectionPanel(BasePanel):
         b = np.array(b).reshape(len(b), 1)
         image_matrix = np.hstack((r, g, b))
         image_matrix = np.reshape(image_matrix, (H, W, 3))
+        self.original_image_matrix = image_matrix
         im = gamma_enhance(image_matrix, enhance_value=2)
         im = white_balance(im)
         self.EnhanceWhiteBalanceImgMat = im
@@ -265,6 +266,17 @@ class DetectionPanel(BasePanel):
         # self.EnhanceImg.Draw(True)
 
     def ShowPlot(self, im):
+        image = np.array(im)
+        r, g, b = image[:, :, 0], image[:, :, 1], image[:, :, 2]
+        r = np.average(np.transpose(r), axis=1)
+        g = np.average(np.transpose(g), axis=1)
+        b = np.average(np.transpose(b), axis=1)
+        gray = np.average(np.average(np.transpose(image), axis=0), axis=1)
+        pic_width_pixel = np.size(r, 0)
+        df = pd.DataFrame({'x': range(0, pic_width_pixel), 'j1': r, 'j2': g, 'j3': b, 'j4': gray})
+        return df
+
+    def ShowPlot_Enhance(self, im):
         image = np.array(im)
         if self.CheckBoxEnhance.GetValue()==True and self.CheckBoxUseWhiteBalance.GetValue()==False:
             image = gamma_enhance(image)
@@ -1109,7 +1121,7 @@ class DetectionPanel(BasePanel):
             self.TextTestLineResult.SetValue('')
 ####################################################Drawing Chart###################################################################
     def ShowOriginalImgChartForCtrlLine(self, start_interval, end_interval, y_start, y_end):
-        df = self.ShowPlot(self.img)
+        df = self.ShowPlot(self.original_image_matrix)
         self.OriginalImgFig.set_figheight(2)
         self.OriginalImgFig.set_figwidth(4.5)
         self.axes_OriginalImg = self.OriginalImgFig.add_subplot(1, 1, 1)
@@ -1137,7 +1149,7 @@ class DetectionPanel(BasePanel):
         self.OriginalImgChart.draw()
 
     def ShowEnhancedImgChartForCtrlLine(self, start_interval, end_interval, y_start, y_end):
-        df = self.ShowPlot(self.EnhancedImgMat)
+        df = self.ShowPlot_Enhance(self.original_image_matrix)
         self.EnhancedImgFig.set_figheight(2)
         self.EnhancedImgFig.set_figwidth(4.5)
         self.axes_EnhancedImg = self.EnhancedImgFig.add_subplot(1, 1, 1)
