@@ -1,10 +1,11 @@
-Coordinate
-Top-left : (446.0, 892.5)
-Right-bottom : (1006.0, 1092.5)
-Width : 560
-Height : 200
-Rotation : 0¢X
-Gray mean value : 
-Top left : 131          Top right : 121
-Bottom left : 133    Bottom right : 125
-Mid : 107
+Coordinate :
+Point1 : (383, 895)
+Point2 : [367 884]
+Rotation : -1¢X
+
+Gray mean value :
+Top-Left :89
+Top-Right :86
+Bottom-Left :103
+Bottom-Right :89
+Mid :111

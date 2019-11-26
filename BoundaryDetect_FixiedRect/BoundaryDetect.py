@@ -379,10 +379,6 @@ class BoundaryDetect(wx.Frame):
         file.write(self.Text)
         file.write('\n'+self.GrayValueText)
 
-
-
-
-
 class App(wx.App):
     def OnInit(self):
         frame = BoundaryDetect()

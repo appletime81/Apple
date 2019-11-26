@@ -1,7 +1,0 @@
-Version : 0.4.0
-Release Date : 20190905
-
-Function : 
-1. Detect 5 places gray mean value on the Image.The 5 places is marked by the light blue rectangle.
-2.Using the red rectangle on the image can let user know the coordinate on the image.
-3.Export button can export a text file in the file called "Text"
