@@ -1,6 +1,0 @@
-Version : 1.1.2
-Release Date : 20191015
-
-Add :
-1. Add the text field for showing 4 blocks result.
-2. Add a button called "Copy to Clipboard", and a text field for showing result after clicking the button.
